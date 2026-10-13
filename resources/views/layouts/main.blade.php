@@ -91,7 +91,7 @@
                     <p class="text-xs text-slate-400 leading-relaxed">
                         Competitive Minecraft Bedrock PvP community server. Duel arenas, optimized knockback, and custom game mechanics.
                     </p>
-                    <a href="{{ $footerSettings['discord_invite_url'] ?? 'https://discord.gg/hydepvp' }}"
+                    <a href="{{ $footerSettings['discord_invite_url'] ?? 'https://discord.gg/VYp7Khvf' }}"
                        target="_blank" rel="noopener noreferrer"
                        class="btn-discord text-xs py-2 px-3 inline-flex">
                         Join Our Discord
@@ -116,11 +116,11 @@
                     <div class="space-y-2 text-xs">
                         <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
                             <span class="text-slate-500 block text-[10px] uppercase font-bold">Address</span>
-                            <span class="text-cyan-300 font-mono font-semibold">{{ $footerSettings['server_address'] ?? 'play.hydepvp.net' }}</span>
+                            <span class="text-cyan-300 font-mono font-semibold">{{ $footerSettings['server_address'] ?? 'hydepvp.ultramc.co' }}</span>
                         </div>
                         <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
-                            <span class="text-slate-500 block text-[10px] uppercase font-bold">Port (Default Bedrock)</span>
-                            <span class="text-slate-300 font-mono font-semibold">{{ $footerSettings['server_port'] ?? '19132' }}</span>
+                            <span class="text-slate-500 block text-[10px] uppercase font-bold">Port (Bedrock)</span>
+                            <span class="text-slate-300 font-mono font-semibold">{{ $footerSettings['server_port'] ?? '19015' }}</span>
                         </div>
                         <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-800">
                             <span class="text-slate-500 block text-[10px] uppercase font-bold">Supported Version</span>

@@ -24,16 +24,16 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="server_address" class="block text-xs uppercase font-bold text-slate-300 mb-1">Server Host / Address</label>
-                    <input type="text" name="server_address" id="server_address" value="{{ old('server_address', $settings['server_address'] ?? 'play.hydepvp.net') }}" required
+                    <input type="text" name="server_address" id="server_address" value="{{ old('server_address', $settings['server_address'] ?? 'hydepvp.ultramc.co') }}" required
                            class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-cyan-300 font-mono focus:outline-none focus:border-purple-500" />
                     <p class="text-[11px] text-slate-500 mt-1">Displayed on the homepage and server info quick connect card.</p>
                 </div>
 
                 <div>
                     <label for="server_port" class="block text-xs uppercase font-bold text-slate-300 mb-1">Bedrock Port</label>
-                    <input type="text" name="server_port" id="server_port" value="{{ old('server_port', $settings['server_port'] ?? '19132') }}" required
+                    <input type="text" name="server_port" id="server_port" value="{{ old('server_port', $settings['server_port'] ?? '19015') }}" required
                            class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-purple-300 font-mono focus:outline-none focus:border-purple-500" />
-                    <p class="text-[11px] text-slate-500 mt-1">Default Bedrock port is 19132.</p>
+                    <p class="text-[11px] text-slate-500 mt-1">Default Bedrock port is 19015.</p>
                 </div>
 
                 <div class="sm:col-span-2">

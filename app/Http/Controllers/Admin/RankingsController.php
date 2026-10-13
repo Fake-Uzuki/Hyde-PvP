@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ClanRanking;
 use App\Models\PlayerRanking;
+use App\Services\PlayerProfileService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class RankingsController extends Controller
 {
+    public function __construct(
+        protected PlayerProfileService $profileService
+    ) {}
+
     public function index(): View
     {
         $players = PlayerRanking::orderBy('rank')->get();
@@ -33,6 +38,7 @@ class RankingsController extends Controller
         ]);
 
         PlayerRanking::create($validated);
+        $this->profileService->forget($validated['gamertag']);
 
         return redirect()->route('admin.rankings.index')->with('status', 'Player ranking entry created.');
     }
@@ -50,14 +56,19 @@ class RankingsController extends Controller
             'clan' => ['nullable', 'string', 'max:50'],
         ]);
 
+        $oldGamertag = $player->gamertag;
         $player->update($validated);
+        $this->profileService->forget($oldGamertag);
+        $this->profileService->forget($validated['gamertag']);
 
         return redirect()->route('admin.rankings.index')->with('status', 'Player ranking entry updated.');
     }
 
     public function destroyPlayer(PlayerRanking $player): RedirectResponse
     {
+        $gamertag = $player->gamertag;
         $player->delete();
+        $this->profileService->forget($gamertag);
 
         return redirect()->route('admin.rankings.index')->with('status', 'Player ranking entry removed.');
     }

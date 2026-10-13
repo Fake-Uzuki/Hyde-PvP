@@ -17,7 +17,7 @@ class RulesController extends Controller
             ->get()
             ->groupBy('category');
 
-        $discordUrl = SiteSetting::get('discord_invite_url', 'https://discord.gg/hydepvp');
+        $discordUrl = SiteSetting::get('discord_invite_url', 'https://discord.gg/VYp7Khvf');
 
         return view('rules', compact('rules', 'discordUrl'));
     }

@@ -15,16 +15,16 @@ class CommunityPagesTest extends TestCase
 
     public function test_guests_can_view_homepage_with_branding_and_connection_info(): void
     {
-        SiteSetting::set('server_address', 'bedrock.hydepvp.net');
-        SiteSetting::set('server_port', '19132');
+        SiteSetting::set('server_address', 'hydepvp.ultramc.co');
+        SiteSetting::set('server_port', '19015');
 
         $response = $this->get('/');
 
         $response->assertStatus(200);
         $response->assertSee('HYDE');
         $response->assertSee('PVP');
-        $response->assertSee('bedrock.hydepvp.net');
-        $response->assertSee('19132');
+        $response->assertSee('hydepvp.ultramc.co');
+        $response->assertSee('19015');
         $response->assertSee('Join Discord');
     }
 

@@ -18,10 +18,10 @@ class SiteSetting extends Model
     public static function defaults(): array
     {
         return [
-            'server_address' => env('BEDROCK_SERVER_ADDRESS', 'play.hydepvp.net'),
-            'server_port' => env('BEDROCK_SERVER_PORT', '19132'),
+            'server_address' => env('BEDROCK_SERVER_ADDRESS', 'hydepvp.ultramc.co'),
+            'server_port' => env('BEDROCK_SERVER_PORT', '19015'),
             'server_version' => env('BEDROCK_SERVER_VERSION', 'v1.21.x (Bedrock)'),
-            'discord_invite_url' => env('DISCORD_INVITE_URL', 'https://discord.gg/hydepvp'),
+            'discord_invite_url' => env('DISCORD_INVITE_URL', 'https://discord.gg/VYp7Khvf'),
             'discord_server_id' => env('DISCORD_SERVER_ID', ''),
             'comment_word_limit' => '500',
             'comment_cooldown_seconds' => '60',

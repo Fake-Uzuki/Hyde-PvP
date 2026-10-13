@@ -30,17 +30,28 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Server Address -->
                 <div class="p-4 rounded-xl bg-[#070A12] border border-slate-800 space-y-1">
-                    <span class="text-[11px] uppercase font-bold text-slate-500">Server IP / Address</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] uppercase font-bold text-slate-500">Server IP / Address</span>
+                        <!-- Live Player Counter Badge -->
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold font-mono {{ ($serverStatus['online'] ?? false) ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40' : 'bg-purple-950/60 text-purple-300 border border-purple-700/40' }}"
+                             title="Current live player count">
+                            <span class="relative flex h-2 w-2">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ ($serverStatus['online'] ?? false) ? 'bg-emerald-400 opacity-75' : 'bg-purple-400 opacity-50' }}"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 {{ ($serverStatus['online'] ?? false) ? 'bg-emerald-500' : 'bg-purple-500' }}"></span>
+                            </span>
+                            <span>{{ $serverStatus['players_online'] ?? 0 }} / {{ $serverStatus['players_max'] ?? 100 }} Online</span>
+                        </div>
+                    </div>
                     <div class="text-lg font-mono font-bold text-cyan-300 select-all">
-                        {{ $settings['server_address'] ?? 'play.hydepvp.net' }}
+                        {{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}
                     </div>
                 </div>
 
                 <!-- Server Port -->
                 <div class="p-4 rounded-xl bg-[#070A12] border border-slate-800 space-y-1">
-                    <span class="text-[11px] uppercase font-bold text-slate-500">Port (Default Bedrock)</span>
+                    <span class="text-[11px] uppercase font-bold text-slate-500">Bedrock Port</span>
                     <div class="text-lg font-mono font-bold text-purple-300 select-all">
-                        {{ $settings['server_port'] ?? '19132' }}
+                        {{ $settings['server_port'] ?? '19015' }}
                     </div>
                 </div>
 
@@ -66,7 +77,7 @@
                     Need help or connection troubleshooting? Ask in our Discord support channel.
                 </p>
                 <button type="button"
-                        onclick="copyServerAddress(this, '{{ $settings['server_address'] ?? 'play.hydepvp.net' }}')"
+                        onclick="copyServerAddress(this, '{{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}')"
                         class="btn-primary text-xs py-3 px-6 w-full sm:w-auto">
                     Copy Server IP
                 </button>
@@ -95,8 +106,8 @@
                     <li>Navigate to the <strong>Servers</strong> tab.</li>
                     <li>Scroll down and tap <strong>Add Server</strong>.</li>
                     <li>Enter Server Name: <span class="text-purple-300 font-mono">HYDE PVP</span></li>
-                    <li>Enter Address: <span class="text-cyan-300 font-mono">{{ $settings['server_address'] ?? 'play.hydepvp.net' }}</span></li>
-                    <li>Port: <span class="text-slate-200 font-mono">{{ $settings['server_port'] ?? '19132' }}</span></li>
+                    <li>Enter Address: <span class="text-cyan-300 font-mono">{{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}</span></li>
+                    <li>Port: <span class="text-slate-200 font-mono">{{ $settings['server_port'] ?? '19015' }}</span></li>
                     <li>Tap <strong>Play</strong> or <strong>Save</strong> to join!</li>
                 </ol>
             </div>
@@ -112,8 +123,8 @@
                     <li>Click <strong>Play</strong> → <strong>Servers</strong> tab.</li>
                     <li>Click <strong>Add Server</strong> at the bottom.</li>
                     <li>Server Name: <span class="text-purple-300 font-mono">HYDE PVP</span></li>
-                    <li>Server Address: <span class="text-cyan-300 font-mono">{{ $settings['server_address'] ?? 'play.hydepvp.net' }}</span></li>
-                    <li>Port: <span class="text-slate-200 font-mono">{{ $settings['server_port'] ?? '19132' }}</span></li>
+                    <li>Server Address: <span class="text-cyan-300 font-mono">{{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}</span></li>
+                    <li>Port: <span class="text-slate-200 font-mono">{{ $settings['server_port'] ?? '19015' }}</span></li>
                     <li>Click <strong>Play</strong> and jump into the fight!</li>
                 </ol>
             </div>
@@ -130,7 +141,7 @@
                         <li>Set your console Primary DNS to a public BedrockConnect DNS (e.g. 104.238.130.180).</li>
                         <li>Join any featured server on the list.</li>
                         <li>The BedrockConnect server list menu will appear.</li>
-                        <li>Add <span class="text-cyan-300 font-mono">{{ $settings['server_address'] ?? 'play.hydepvp.net' }}</span> and join.</li>
+                        <li>Add <span class="text-cyan-300 font-mono">{{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}</span> and join.</li>
                     </ul>
                 </div>
             </div>
