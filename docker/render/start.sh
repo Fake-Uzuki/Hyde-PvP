@@ -7,6 +7,9 @@ export PORT=${PORT:-10000}
 echo "==> Configuring Nginx on PORT $PORT..."
 envsubst '${PORT}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf
 
+# Remove composer platform check if present to prevent version lock halts
+rm -f /var/www/html/vendor/composer/platform_check.php
+
 # Ensure .env file exists
 if [ ! -f /var/www/html/.env ]; then
     echo "==> Creating .env from .env.example..."

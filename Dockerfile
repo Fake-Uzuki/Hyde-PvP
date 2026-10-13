@@ -11,19 +11,21 @@ COPY vite.config.js tailwind.config.js postcss.config.js ./
 RUN npm run build
 
 # ====================================================
-# Stage 2: Install Composer Dependencies
+# Stage 2: Install Composer Dependencies (PHP 8.4)
 # ====================================================
-FROM composer:2.8 AS composer-builder
+FROM php:8.4-cli-bookworm AS composer-builder
+COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+RUN apt-get update && apt-get install -y --no-install-recommends git unzip libzip-dev ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY composer*.json ./
-RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --no-scripts --optimize-autoloader --ignore-platform-req=php
 COPY . .
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --ignore-platform-req=php
 
 # ====================================================
-# Stage 3: Production Image (PHP 8.3-FPM + Nginx + Supervisor)
+# Stage 3: Production Image (PHP 8.4-FPM + Nginx + Supervisor)
 # ====================================================
-FROM php:8.3-fpm-bookworm
+FROM php:8.4-fpm-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
