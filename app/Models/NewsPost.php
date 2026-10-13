@@ -19,6 +19,8 @@ class NewsPost extends Model
         'slug',
         'excerpt',
         'body',
+        'images',
+        'video_path',
         'is_published',
         'published_at',
     ];
@@ -26,9 +28,45 @@ class NewsPost extends Model
     protected function casts(): array
     {
         return [
+            'images' => 'array',
             'is_published' => 'boolean',
             'published_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Get accessible URLs for all uploaded images.
+     */
+    public function getImageUrlsAttribute(): array
+    {
+        if (empty($this->images) || ! is_array($this->images)) {
+            return [];
+        }
+
+        return array_map(function ($path) {
+            return \Illuminate\Support\Facades\Storage::url($path);
+        }, $this->images);
+    }
+
+    /**
+     * Get accessible URL for the uploaded video.
+     */
+    public function getVideoUrlAttribute(): ?string
+    {
+        if (empty($this->video_path)) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Storage::url($this->video_path);
+    }
+
+    /**
+     * Get first image URL as featured/thumbnail image.
+     */
+    public function getFeaturedImageUrlAttribute(): ?string
+    {
+        $urls = $this->image_urls;
+        return !empty($urls) ? $urls[0] : null;
     }
 
     protected static function booted(): void

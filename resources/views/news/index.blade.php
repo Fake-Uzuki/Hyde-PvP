@@ -26,18 +26,32 @@
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($posts as $post)
-                <article class="gaming-card p-6 flex flex-col justify-between">
+                <article class="gaming-card p-6 flex flex-col justify-between overflow-hidden">
                     <div class="space-y-4">
+                        @if($post->featured_image_url)
+                            <a href="{{ route('news.show', $post->slug) }}" class="block -mx-6 -mt-6 mb-4 overflow-hidden aspect-video bg-slate-950 group/img">
+                                <img src="{{ $post->featured_image_url }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover/img:scale-105 transition duration-300" />
+                            </a>
+                        @endif
+
                         <div class="flex items-center justify-between text-xs text-slate-400">
                             <span class="text-purple-300 font-medium">
                                 {{ $post->published_at ? $post->published_at->format('M d, Y') : $post->created_at->format('M d, Y') }}
                             </span>
-                            <span class="flex items-center gap-1 text-slate-400">
-                                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                                {{ $post->visible_comments_count }}
-                            </span>
+                            <div class="flex items-center gap-3">
+                                @if($post->video_url)
+                                    <span class="text-[11px] text-cyan-400 font-semibold" title="Includes video">🎥 Video</span>
+                                @endif
+                                @if(!empty($post->images) && count($post->images) > 1)
+                                    <span class="text-[11px] text-purple-400 font-semibold" title="Multiple photos">📸 {{ count($post->images) }}</span>
+                                @endif
+                                <span class="flex items-center gap-1 text-slate-400">
+                                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    </svg>
+                                    {{ $post->visible_comments_count }}
+                                </span>
+                            </div>
                         </div>
 
                         <h2 class="text-xl font-bold text-white hover:text-purple-300 transition line-clamp-2">

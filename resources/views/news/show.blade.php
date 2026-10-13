@@ -35,10 +35,73 @@
             @endif
         </header>
 
+        <!-- Video Player Attachment (if present) -->
+        @if($post->video_url)
+            <div class="rounded-2xl overflow-hidden border border-cyan-500/30 bg-black shadow-2xl space-y-2">
+                <div class="p-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between text-xs text-cyan-300">
+                    <span class="font-bold flex items-center gap-1.5">
+                        <span>🎥</span> Video Highlight
+                    </span>
+                    <span class="text-slate-400">Click to play</span>
+                </div>
+                <video controls class="w-full max-h-[480px] bg-black rounded-b-xl" preload="metadata">
+                    <source src="{{ $post->video_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        @endif
+
         <!-- Post Content (Escaped and formatted) -->
         <div class="prose prose-invert max-w-none text-slate-300 text-base leading-relaxed space-y-4 whitespace-pre-line">
             {{ $post->body }}
         </div>
+
+        <!-- Image Gallery Attachment (1 to 5 images) -->
+        @if(!empty($post->image_urls) && count($post->image_urls) > 0)
+            <div x-data="{ modalOpen: false, modalSrc: '' }" class="space-y-4 pt-6 border-t border-slate-800">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
+                        <span>📸</span> Photo Gallery ({{ count($post->image_urls) }})
+                    </h3>
+                    <span class="text-xs text-slate-400">Click any image to view full size</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 {{ count($post->image_urls) >= 3 ? 'lg:grid-cols-3' : '' }} gap-4">
+                    @foreach($post->image_urls as $imgUrl)
+                        <div @click="modalSrc = '{{ $imgUrl }}'; modalOpen = true"
+                             class="group cursor-pointer relative rounded-2xl overflow-hidden border border-slate-800 hover:border-purple-500/60 transition shadow-md bg-slate-950 aspect-video">
+                            <img src="{{ $imgUrl }}"
+                                 alt="Announcement image"
+                                 class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                 loading="lazy" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3">
+                                <span class="text-xs text-white font-semibold flex items-center gap-1">
+                                    <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                    </svg>
+                                    View Full Image
+                                </span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Lightbox Modal -->
+                <div x-show="modalOpen"
+                     x-cloak
+                     @keydown.escape.window="modalOpen = false"
+                     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md"
+                     style="display: none;">
+                    <div @click.away="modalOpen = false" class="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
+                        <button @click="modalOpen = false"
+                                class="absolute -top-10 right-0 text-white hover:text-rose-400 text-sm font-bold uppercase tracking-wider flex items-center gap-1 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700">
+                            ✕ Close
+                        </button>
+                        <img :src="modalSrc" alt="Full Preview" class="max-w-full max-h-[85vh] object-contain rounded-2xl border border-purple-500/40 shadow-2xl" />
+                    </div>
+                </div>
+            </div>
+        @endif
     </article>
 
     <!-- Comments Section -->
