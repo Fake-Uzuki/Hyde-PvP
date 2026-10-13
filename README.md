@@ -48,7 +48,50 @@ Built with **Laravel 13**, **Laravel Breeze**, **Tailwind CSS**, and **Alpine.js
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start with Docker (Recommended for any OS)
+
+The project includes a complete, cross-platform Docker development environment with **PHP 8.3 FPM**, **Nginx**, **MySQL 8.0**, **Redis 7**, **Vite HMR**, and background **Queue Workers**. It works on Windows (Docker Desktop / WSL2), macOS (Apple Silicon M1-M4 & Intel), and Linux with **zero local PHP or Node.js required**.
+
+### 1-Step Setup:
+
+- **Windows (PowerShell):**
+  ```powershell
+  .\docker-dev.ps1 setup
+  ```
+
+- **Windows (Command Prompt):**
+  ```cmd
+  docker-dev.bat setup
+  ```
+
+- **macOS / Linux / WSL:**
+  ```bash
+  chmod +x docker-dev.sh
+  ./docker-dev.sh setup
+  # or: make setup
+  ```
+
+Once finished, open:
+- 🌐 **Web Application:** `http://localhost:8000`
+- ⚡ **Vite Hot-Reload:** `http://localhost:5173`
+- 🗄️ **MySQL Database:** `localhost:3306` (User: `laravel`, Password: `secret`, Database: `p5db`)
+- 🔴 **Redis:** `localhost:6379`
+
+### Handy Docker CLI Commands:
+| Task | Windows (PowerShell) | macOS / Linux / WSL |
+| :--- | :--- | :--- |
+| Start containers | `.\docker-dev.ps1 up` | `./docker-dev.sh up` |
+| Stop containers | `.\docker-dev.ps1 down` | `./docker-dev.sh down` |
+| View logs | `.\docker-dev.ps1 logs` | `./docker-dev.sh logs` |
+| Run artisan | `.\docker-dev.ps1 artisan migrate` | `./docker-dev.sh artisan migrate` |
+| Run composer | `.\docker-dev.ps1 composer require <pkg>` | `./docker-dev.sh composer require <pkg>` |
+| Run npm | `.\docker-dev.ps1 npm run build` | `./docker-dev.sh npm run build` |
+| Enter bash | `.\docker-dev.ps1 bash` | `./docker-dev.sh bash` |
+| Run tests | `.\docker-dev.ps1 test` | `./docker-dev.sh test` |
+
+---
+
+## 💻 Manual Local Installation (Without Docker)
 
 ### 1. Requirements
 
@@ -56,6 +99,7 @@ Built with **Laravel 13**, **Laravel Breeze**, **Tailwind CSS**, and **Alpine.js
 - **Extensions:** `pdo`, `pdo_mysql` or `pdo_sqlite`, `mbstring`, `openssl`, `tokenizer`, `xml`, `ctype`, `json`, `curl`
 - **Composer:** 2.x
 - **Node.js:** 20.x or higher & npm
+
 
 ### 2. Installation
 

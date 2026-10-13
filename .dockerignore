@@ -1,0 +1,16 @@
+.git
+.github
+node_modules
+vendor
+.phpunit.result.cache
+docker-dev.log
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db

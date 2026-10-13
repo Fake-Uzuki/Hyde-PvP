@@ -1,0 +1,125 @@
+services:
+  # Laravel PHP 8.3 FPM Application Service
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      args:
+        WWWUSER: "${WWWUSER:-1000}"
+        WWWGROUP: "${WWWGROUP:-1000}"
+    container_name: hydepvp-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - hyde-network
+
+  # Nginx Web Server Reverse Proxy
+  web:
+    image: nginx:1.27-alpine
+    container_name: hydepvp-web
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - hyde-network
+
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: hydepvp-mysql
+    restart: unless-stopped
+    ports:
+      - "${FORWARD_DB_PORT:-3306}:3306"
+    environment:
+      MYSQL_DATABASE: "${DB_DATABASE:-p5db}"
+      MYSQL_USER: "${DB_USERNAME:-laravel}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-secret}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root_secret}"
+    volumes:
+      - hyde_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - hyde-network
+
+  # Redis In-Memory Cache & Queue Broker
+  redis:
+    image: redis:7-alpine
+    container_name: hydepvp-redis
+    restart: unless-stopped
+    ports:
+      - "${FORWARD_REDIS_PORT:-6379}:6379"
+    volumes:
+      - hyde_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - hyde-network
+
+  # Vite Frontend Hot Module Replacement (HMR) Server
+  vite:
+    image: node:20-alpine
+    container_name: hydepvp-vite
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "${VITE_PORT:-5173}:5173"
+    volumes:
+      - ./:/var/www/html
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - app
+    networks:
+      - hyde-network
+
+  # Background Queue Worker
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: hydepvp-queue
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    depends_on:
+      - app
+      - mysql:
+          condition: service_healthy
+      - redis:
+          condition: service_healthy
+    networks:
+      - hyde-network
+
+volumes:
+  hyde_mysql_data:
+    driver: local
+  hyde_redis_data:
+    driver: local
+
+networks:
+  hyde-network:
+    driver: bridge
