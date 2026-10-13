@@ -280,8 +280,112 @@
             </div>
         </div>
 
-        <!-- Right Column: Password & Account Deletion (5 cols) -->
+        <!-- Right Column: Verification, Password & Account Deletion (5 cols) -->
         <div class="lg:col-span-5 space-y-8">
+
+            <!-- Card: In-Game Bedrock Verification (The Gold Standard) -->
+            <div class="gaming-card p-6 sm:p-8 space-y-5 border border-cyan-500/20" x-data="inGameVerifier()">
+                <div class="flex items-start justify-between border-b border-slate-800 pb-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white font-gaming flex items-center gap-2">
+                            <span>🛡️</span> Bedrock Verification
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">
+                            Verify in-game ownership on <span class="font-mono text-cyan-300">hydepvp.ultramc.co</span>
+                        </p>
+                    </div>
+
+                    @if($user->is_verified)
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase">
+                            Verified ✓
+                        </span>
+                    @else
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase">
+                            Unverified
+                        </span>
+                    @endif
+                </div>
+
+                @if($user->is_verified)
+                    <!-- Verified State -->
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30 space-y-2">
+                            <div class="flex items-center gap-2 text-emerald-300 font-bold text-xs uppercase tracking-wide">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                Verified Bedrock Identity
+                            </div>
+                            <div class="text-sm font-mono text-white font-bold">
+                                {{ $user->minecraft_gamertag }}
+                            </div>
+                            <p class="text-[11px] text-slate-400">
+                                Verified {{ $user->verified_at ? $user->verified_at->format('M d, Y') : 'online' }}. Your rank, combat profile, and custom skins are officially protected.
+                            </p>
+                        </div>
+
+                        <form method="POST" action="{{ route('profile.verify.unlink') }}" onsubmit="return confirm('Are you sure you want to unlink your verified Minecraft gamertag?')">
+                            @csrf
+                            <button type="submit" class="text-xs text-slate-400 hover:text-rose-400 underline">
+                                Unlink Bedrock Gamertag
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <!-- Unverified State with In-Game Verification Generator -->
+                    <div class="space-y-4">
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Prove you own this gamertag to unlock the <strong class="text-cyan-300">Verified Player Badge</strong> on your profile and leaderboards.
+                        </p>
+
+                        <div x-show="!code" class="pt-1">
+                            <button type="button"
+                                    @click="requestCode()"
+                                    :disabled="loading"
+                                    class="w-full btn-primary text-xs py-2.5 px-4 flex items-center justify-center gap-2 disabled:opacity-50">
+                                <span x-show="!loading">Generate In-Game Code</span>
+                                <span x-show="loading" style="display:none;">Contacting Server...</span>
+                            </button>
+                        </div>
+
+                        <!-- Generated Code & In-Game Command Display -->
+                        <div x-show="code" x-cloak class="space-y-3" style="display: none;">
+                            <div class="p-4 rounded-xl bg-purple-950/40 border border-purple-500/40 text-center space-y-2">
+                                <span class="text-[10px] uppercase tracking-wider text-purple-300 font-bold block">
+                                    Your 6-Digit In-Game Code
+                                </span>
+                                <div class="text-2xl font-black font-mono tracking-widest text-white" x-text="code"></div>
+                                <p class="text-[11px] text-slate-400">
+                                    Expires in <span class="text-amber-400 font-mono font-bold" x-text="countdownText">15:00</span>
+                                </p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1.5">
+                                <span class="text-[10px] uppercase font-bold text-slate-400 block">
+                                    Step 2: Run This In-Game
+                                </span>
+                                <div class="flex items-center justify-between gap-2 p-2 rounded-lg bg-[#070A12] border border-slate-800">
+                                    <code class="text-xs font-mono font-bold text-cyan-300 select-all" x-text="command"></code>
+                                    <button type="button" @click="copyCommand()" class="text-[11px] text-purple-400 hover:text-purple-300 font-semibold px-2 py-0.5 rounded bg-purple-950 border border-purple-800/40">
+                                        <span x-text="copied ? 'Copied!' : 'Copy'"></span>
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-slate-500">
+                                    Log in to <strong class="text-slate-400">hydepvp.ultramc.co:19015</strong> and type the command in chat.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center gap-2 text-[11px] text-slate-400 justify-center pt-1">
+                                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                                <span>Listening for in-game verification...</span>
+                            </div>
+                        </div>
+
+                        <!-- Success Celebratory Banner -->
+                        <div x-show="justVerified" x-cloak class="p-3 rounded-xl bg-emerald-950 border border-emerald-500 text-xs text-emerald-300 text-center font-bold" style="display: none;">
+                            🎉 Verified successfully in-game! Reloading...
+                        </div>
+                    </div>
+                @endif
+            </div>
 
             <!-- Card 3: Update Password -->
             <div class="gaming-card p-6 sm:p-8 space-y-6">
@@ -451,6 +555,92 @@ function skinUploader() {
             };
 
             img.src = url;
+        }
+    };
+}
+
+function inGameVerifier() {
+    return {
+        code: null,
+        command: '',
+        expiresIn: 900,
+        countdownText: '15:00',
+        loading: false,
+        copied: false,
+        justVerified: false,
+        pollInterval: null,
+        timerInterval: null,
+
+        requestCode() {
+            this.loading = true;
+            fetch('{{ route("profile.verify.generate") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                this.loading = false;
+                if (data.success) {
+                    this.code = data.code;
+                    this.command = data.command;
+                    this.expiresIn = data.expires_in_seconds;
+                    this.startCountdown();
+                    this.startPolling();
+                }
+            })
+            .catch(() => {
+                this.loading = false;
+                alert('Could not generate verification code. Please refresh and try again.');
+            });
+        },
+
+        copyCommand() {
+            navigator.clipboard.writeText(this.command);
+            this.copied = true;
+            setTimeout(() => this.copied = false, 2000);
+        },
+
+        startCountdown() {
+            if (this.timerInterval) clearInterval(this.timerInterval);
+            this.updateCountdownText();
+            this.timerInterval = setInterval(() => {
+                this.expiresIn--;
+                if (this.expiresIn <= 0) {
+                    clearInterval(this.timerInterval);
+                    clearInterval(this.pollInterval);
+                    this.code = null;
+                }
+                this.updateCountdownText();
+            }, 1000);
+        },
+
+        updateCountdownText() {
+            const m = Math.floor(this.expiresIn / 60);
+            const s = this.expiresIn % 60;
+            this.countdownText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        },
+
+        startPolling() {
+            if (this.pollInterval) clearInterval(this.pollInterval);
+            this.pollInterval = setInterval(() => {
+                fetch('{{ route("profile.verify.status") }}', {
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.is_verified) {
+                        clearInterval(this.pollInterval);
+                        clearInterval(this.timerInterval);
+                        this.justVerified = true;
+                        setTimeout(() => window.location.reload(), 1500);
+                    }
+                })
+                .catch(() => {});
+            }, 3000);
         }
     };
 }

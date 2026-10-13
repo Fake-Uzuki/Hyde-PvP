@@ -32,6 +32,7 @@ Route::get('/rankings', [RankingsController::class, 'index'])->name('rankings');
 Route::get('/players', [PlayerProfileController::class, 'index'])->name('players.index');
 Route::get('/players/{gamertag}', [PlayerProfileController::class, 'show'])->name('players.show');
 Route::get('/api/server-status', [ServerInfoController::class, 'statusJson'])->name('api.server-status');
+Route::post('/api/server/verify-player', [\App\Http\Controllers\PlayerVerificationController::class, 'verifyFromGame'])->name('api.server.verify-player');
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // In-Game Player Verification Actions
+    Route::post('/profile/verify/generate', [\App\Http\Controllers\PlayerVerificationController::class, 'generate'])->name('profile.verify.generate');
+    Route::get('/profile/verify/status', [\App\Http\Controllers\PlayerVerificationController::class, 'status'])->name('profile.verify.status');
+    Route::post('/profile/verify/unlink', [\App\Http\Controllers\PlayerVerificationController::class, 'unlink'])->name('profile.verify.unlink');
 });
 
 /*

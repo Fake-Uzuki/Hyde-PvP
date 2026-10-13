@@ -1,0 +1,16 @@
+name: HydeVerify
+version: 1.0.0
+main: HydeVerify\Main
+api: 5.0.0
+author: HYDE PVP
+description: Links Minecraft Bedrock players to their HYDE PVP website account.
+
+commands:
+  verify:
+    description: Link your Bedrock account to your HYDE PVP website account.
+    usage: "/verify <code>"
+    permission: hyde.verify.use
+permissions:
+  hyde.verify.use:
+    default: true
+    description: Allows players to verify their account.
