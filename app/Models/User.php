@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'minecraft_gamertag'])]
+#[Fillable(['name', 'email', 'password', 'role', 'minecraft_gamertag', 'skin_path', 'avatar_head_path'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,6 +29,42 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get user avatar URL (custom uploaded skin head, Bedrock gamertag head, or default).
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if (!empty($this->avatar_head_path)) {
+            return \Illuminate\Support\Facades\Storage::url($this->avatar_head_path);
+        }
+
+        if (!empty($this->minecraft_gamertag)) {
+            return "https://mc-heads.net/avatar/" . rawurlencode(trim($this->minecraft_gamertag)) . "/64";
+        }
+
+        return "https://mc-heads.net/avatar/MHF_Steve/64";
+    }
+
+    /**
+     * Get user raw skin PNG URL if uploaded.
+     */
+    public function getSkinUrlAttribute(): ?string
+    {
+        if (!empty($this->skin_path)) {
+            return \Illuminate\Support\Facades\Storage::url($this->skin_path);
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if user has uploaded a custom Minecraft skin.
+     */
+    public function hasCustomSkin(): bool
+    {
+        return !empty($this->avatar_head_path);
     }
 
     public function isAdmin(): bool

@@ -27,6 +27,8 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'minecraft_gamertag' => ['nullable', 'string', 'max:32', 'regex:/^[a-zA-Z0-9_ ]+$/'],
+            'skin' => ['nullable', 'file'],
+            'remove_skin' => ['nullable', 'boolean'],
         ];
     }
 }

@@ -22,17 +22,57 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Update the user's profile information and Minecraft skin.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, \App\Services\MinecraftSkinService $skinService): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // 1. Handle skin upload if present
+        if ($request->hasFile('skin')) {
+            $skinError = $skinService->validateSkin($request->file('skin'));
+            if ($skinError) {
+                return back()->withErrors(['skin' => $skinError])->withInput();
+            }
+
+            // Remove previous custom skin files if any
+            $skinService->deleteOldSkin($user->skin_path, $user->avatar_head_path);
+
+            // Store new skin and extract head
+            $stored = $skinService->saveSkinAndExtractHead($request->file('skin'), $user->id);
+            $user->skin_path = $stored['skin_path'];
+            $user->avatar_head_path = $stored['avatar_head_path'];
+
+            if ($user->minecraft_gamertag) {
+                \App\Services\PlayerAvatarService::clearCache($user->minecraft_gamertag);
+            }
+        } elseif ($request->boolean('remove_skin')) {
+            // User requested to remove custom skin and revert to Bedrock skin / default
+            $skinService->deleteOldSkin($user->skin_path, $user->avatar_head_path);
+            $user->skin_path = null;
+            $user->avatar_head_path = null;
+
+            if ($user->minecraft_gamertag) {
+                \App\Services\PlayerAvatarService::clearCache($user->minecraft_gamertag);
+            }
         }
 
-        $request->user()->save();
+        // 2. Handle basic profile fields
+        $oldGamertag = $user->minecraft_gamertag;
+        $user->fill($request->safe()->only(['name', 'email', 'minecraft_gamertag']));
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        if ($oldGamertag && $oldGamertag !== $user->minecraft_gamertag) {
+            \App\Services\PlayerAvatarService::clearCache($oldGamertag);
+        }
+        if ($user->minecraft_gamertag) {
+            \App\Services\PlayerAvatarService::clearCache($user->minecraft_gamertag);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

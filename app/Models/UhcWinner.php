@@ -33,7 +33,7 @@ class UhcWinner extends Model
      */
     public function getWinnerAvatarUrlAttribute(): string
     {
-        return "https://mc-heads.net/avatar/" . rawurlencode(trim($this->winner_gamertag)) . "/64";
+        return \App\Services\PlayerAvatarService::getAvatarUrl($this->winner_gamertag, 64);
     }
 
     /**
@@ -45,6 +45,6 @@ class UhcWinner extends Model
             return null;
         }
 
-        return "https://mc-heads.net/avatar/" . rawurlencode(trim($this->runner_up_gamertag)) . "/48";
+        return \App\Services\PlayerAvatarService::getAvatarUrl($this->runner_up_gamertag, 48);
     }
 }
