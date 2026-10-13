@@ -1,5 +1,5 @@
 @php
-    $discordUrl = \App\Models\SiteSetting::get('discord_invite_url', 'https://discord.gg/hydepvp');
+    $discordUrl = \App\Models\SiteSetting::get('discord_invite_url', 'https://discord.gg/VYp7Khvf');
 @endphp
 
 <nav x-data="{ open: false }" class="sticky top-0 z-50 bg-[#070A12]/95 backdrop-blur-md border-b border-slate-800/80 shadow-lg shadow-black/40">
@@ -8,7 +8,9 @@
             <!-- Brand & Desktop Navigation -->
             <div class="flex items-center gap-8">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group focus:outline-none">
-                    <img src="{{ asset('images/hyde-pvp-logo.png') }}" alt="HYDE PVP" class="h-11 w-auto object-contain rounded-xl shadow-md transition-transform duration-200 group-hover:scale-105" />
+                    <div class="logo-lighting-wrap">
+                        <img src="{{ asset('images/hyde-pvp-logo.png') }}" alt="HYDE PVP" class="logo-lighting-glow h-11 w-auto object-contain rounded-xl shadow-md transition-transform duration-200 group-hover:scale-105" />
+                    </div>
                     <div class="flex flex-col">
                         <span class="font-extrabold text-xl tracking-wider text-white font-gaming flex items-center gap-1.5">
                             HYDE <span class="gaming-gradient-text">PVP</span>
@@ -40,6 +42,10 @@
                     <a href="{{ route('rankings') }}"
                        class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('rankings') ? 'bg-purple-600/20 text-purple-300 border border-purple-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/60' }}">
                         Rankings
+                    </a>
+                    <a href="{{ route('players.index') }}"
+                       class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-colors duration-150 {{ request()->routeIs('players.*') ? 'bg-purple-600/20 text-purple-300 border border-purple-500/30' : 'text-slate-300 hover:text-white hover:bg-slate-800/60' }}">
+                        Players
                     </a>
                 </div>
             </div>
@@ -163,6 +169,9 @@
         </a>
         <a href="{{ route('rankings') }}" class="block px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('rankings') ? 'bg-purple-600/20 text-purple-300' : 'text-slate-300 hover:bg-slate-800' }}">
             Rankings
+        </a>
+        <a href="{{ route('players.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium {{ request()->routeIs('players.*') ? 'bg-purple-600/20 text-purple-300' : 'text-slate-300 hover:bg-slate-800' }}">
+            Players
         </a>
 
         <div class="pt-4 border-t border-slate-800">

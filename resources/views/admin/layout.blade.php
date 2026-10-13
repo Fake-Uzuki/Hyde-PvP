@@ -86,6 +86,14 @@
                     Rankings
                 </a>
 
+                <a href="{{ route('admin.uhc.index') }}"
+                   class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition {{ request()->routeIs('admin.uhc.*') ? 'bg-purple-600/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                    </svg>
+                    UHC Champions
+                </a>
+
                 <div class="pt-4 pb-1 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-500">System & Users</div>
 
                 <a href="{{ route('admin.users.index') }}"

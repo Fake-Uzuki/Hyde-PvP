@@ -54,4 +54,31 @@
     .ice-gradient-text {
         @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-200 to-sky-400;
     }
+
+    /* Logo Lighting & Luminescence Hover Effect */
+    .logo-lighting-wrap,
+    .logo-lightning-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-lighting-glow,
+    .logo-lightning-glow {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.8));
+    }
+
+    .logo-lighting-wrap:hover .logo-lighting-glow,
+    .logo-lightning-wrap:hover .logo-lightning-glow,
+    .logo-lighting-wrap:hover .logo-lightning-glow,
+    .logo-lightning-wrap:hover .logo-lighting-glow {
+        transform: scale(1.06);
+        filter: brightness(1.3) contrast(1.1)
+               drop-shadow(0 0 25px rgba(168, 85, 247, 0.95))
+               drop-shadow(0 0 50px rgba(217, 70, 239, 0.85))
+               drop-shadow(0 0 85px rgba(139, 92, 246, 0.6));
+    }
 }
+

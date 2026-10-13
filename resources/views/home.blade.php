@@ -18,7 +18,9 @@
 
                 <!-- Logo & Heading -->
                 <div class="flex flex-col items-center">
-                    <img src="{{ asset('images/hyde-pvp-logo.png') }}" alt="HYDE PVP" class="h-28 sm:h-36 w-auto object-contain drop-shadow-[0_10px_25px_rgba(168,85,247,0.35)] mb-4" />
+                    <div class="logo-lighting-wrap cursor-pointer mb-5 group">
+                        <img src="{{ asset('images/hyde-pvp-logo.png') }}" alt="HYDE PVP" class="logo-lighting-glow h-32 sm:h-44 w-auto object-contain rounded-2xl" />
+                    </div>
                     <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white font-gaming">
                         DOMINATE THE <span class="gaming-gradient-text">ARENA</span>
                     </h1>
@@ -30,7 +32,7 @@
 
                 <!-- CTA Buttons -->
                 <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
-                    <a href="{{ $settings['discord_invite_url'] ?? 'https://discord.gg/hydepvp' }}"
+                    <a href="{{ $settings['discord_invite_url'] ?? 'https://discord.gg/VYp7Khvf' }}"
                        target="_blank" rel="noopener noreferrer"
                        class="btn-discord text-base py-3.5 px-8">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
@@ -48,28 +50,48 @@
                     </a>
                 </div>
 
-                <!-- Server Quick Connect Card -->
-                <div class="pt-8 max-w-xl mx-auto">
-                    <div class="gaming-card p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div class="flex items-center gap-3 text-left">
-                            <div class="w-10 h-10 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Server Quick Connect Card with Live Player Counter -->
+                <div class="pt-8 max-w-2xl mx-auto">
+                    <div class="gaming-card p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border border-purple-500/20 shadow-lg shadow-purple-950/20">
+                        <div class="flex items-center gap-3.5 text-left">
+                            <div class="w-11 h-11 rounded-xl bg-purple-900/40 border border-purple-500/40 flex items-center justify-center text-purple-400 shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
                                 </svg>
                             </div>
-                            <div>
-                                <div class="text-[11px] uppercase tracking-wider text-slate-400 font-bold flex items-center gap-2">
-                                    Minecraft Bedrock Server
-                                    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">Port: {{ $settings['server_port'] ?? '19132' }}</span>
+                            <div class="space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">
+                                        Minecraft Bedrock
+                                    </span>
+                                    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono">
+                                        Port: {{ $settings['server_port'] ?? '19015' }}
+                                    </span>
+
+                                    <!-- Live Player Counter Badge -->
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold font-mono {{ ($serverStatus['online'] ?? false) ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40' : 'bg-purple-950/60 text-purple-300 border border-purple-700/40' }}"
+                                         title="Live player count on hydepvp.ultramc.co:19015">
+                                        <span class="relative flex h-2 w-2">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ ($serverStatus['online'] ?? false) ? 'bg-emerald-400 opacity-75' : 'bg-purple-400 opacity-50' }}"></span>
+                                            <span class="relative inline-flex rounded-full h-2 w-2 {{ ($serverStatus['online'] ?? false) ? 'bg-emerald-500' : 'bg-purple-500' }}"></span>
+                                        </span>
+                                        <span>
+                                            @if(($serverStatus['online'] ?? false))
+                                                {{ $serverStatus['players_online'] }} / {{ $serverStatus['players_max'] }} Players Online
+                                            @else
+                                                {{ $serverStatus['players_online'] ?? 0 }} Players Online
+                                            @endif
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="text-base font-mono font-bold text-cyan-300 select-all">
-                                    {{ $settings['server_address'] ?? 'play.hydepvp.net' }}
+                                <div class="text-lg font-mono font-bold text-cyan-300 select-all">
+                                    {{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}
                                 </div>
                             </div>
                         </div>
 
                         <button type="button"
-                                onclick="copyServerAddress(this, '{{ $settings['server_address'] ?? 'play.hydepvp.net' }}')"
+                                onclick="copyServerAddress(this, '{{ $settings['server_address'] ?? 'hydepvp.ultramc.co' }}')"
                                 class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs tracking-wide uppercase transition active:scale-95 shadow-md shadow-purple-600/30 flex items-center justify-center gap-1.5">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -82,58 +104,59 @@
         </div>
     </section>
 
-    <!-- Server Highlights -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-12">
-            <h2 class="text-2xl sm:text-3xl font-extrabold text-white font-gaming">
-                BUILT FOR <span class="gaming-gradient-text">COMPETITIVE PVP</span>
-            </h2>
-            <p class="text-slate-400 text-sm mt-2">
-                Engineered specifically for Minecraft Bedrock players across mobile, Windows 10/11, and consoles.
-            </p>
-        </div>
+    @if($reigningUhcWinner)
+        <!-- Reigning UHC Champion Showcase -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-950/40 via-purple-950/30 to-slate-900 border border-amber-500/30 p-6 sm:p-8 shadow-xl shadow-amber-950/10">
+                <div class="absolute -right-8 -top-8 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Card 1 -->
-            <div class="gaming-card p-6 space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-bold text-white font-gaming">Optimized Knockback & Hit-Reg</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">
-                    Custom velocity tuning and hit-registration designed to eliminate Bedrock delay and offer snappy combo gameplay.
-                </p>
-            </div>
+                <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                        <div class="relative">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-900 border-2 border-amber-400/80 overflow-hidden shadow-lg shadow-amber-500/20 flex-shrink-0">
+                                <img src="{{ $reigningUhcWinner->winner_avatar_url }}"
+                                     alt="{{ $reigningUhcWinner->winner_gamertag }}"
+                                     onerror="this.style.display='none'"
+                                     class="w-full h-full object-cover pixelated" />
+                            </div>
+                            <span class="absolute -top-2 -right-2 text-xl" title="Reigning Champion">👑</span>
+                        </div>
 
-            <!-- Card 2 -->
-            <div class="gaming-card p-6 space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-fuchsia-900/30 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-bold text-white font-gaming">Duel Ladders & Arenas</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">
-                    Queue instantly for Nodebuff, Sumo, Boxing, Combo, and BuildUHC in ranked and unranked arenas.
-                </p>
-            </div>
+                        <div class="space-y-1">
+                            <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold uppercase tracking-wider">
+                                <span>🏆</span> Reigning UHC Tournament Champion
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-white font-gaming">
+                                <a href="{{ route('players.show', $reigningUhcWinner->winner_gamertag) }}" class="hover:text-amber-300 transition">
+                                    {{ $reigningUhcWinner->winner_gamertag }}
+                                </a>
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-300">
+                                Victor of <strong class="text-white">{{ $reigningUhcWinner->title }}</strong> ({{ $reigningUhcWinner->game_mode }})
+                                @if($reigningUhcWinner->winner_kills !== null)
+                                    • <span class="text-rose-400 font-mono font-bold">{{ $reigningUhcWinner->winner_kills }} Kills</span>
+                                @endif
+                                @if($reigningUhcWinner->prize)
+                                    • <span class="text-emerald-400 font-medium">Prize: {{ $reigningUhcWinner->prize }}</span>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
 
-            <!-- Card 3 -->
-            <div class="gaming-card p-6 space-y-4">
-                <div class="w-12 h-12 rounded-xl bg-cyan-900/30 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                    </svg>
+                    <div class="flex items-center gap-3 w-full lg:w-auto">
+                        <a href="{{ route('rankings') }}?tab=uhc"
+                           class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition text-center shadow-md shadow-amber-500/20">
+                            Hall of Champions →
+                        </a>
+                        <a href="{{ route('players.show', $reigningUhcWinner->winner_gamertag) }}"
+                           class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs transition text-center">
+                            Profile
+                        </a>
+                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-white font-gaming">Active Discord Community</h3>
-                <p class="text-slate-400 text-sm leading-relaxed">
-                    Weekly clan wars and community tournaments. All scheduling and matchmaking happen directly on our Discord.
-                </p>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     <!-- Latest News Section -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -230,13 +253,20 @@
                     </h3>
                     <div class="space-y-2">
                         @foreach($topPlayers as $player)
-                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-sm">
+                            <a href="{{ route('players.show', $player->gamertag) }}"
+                               class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 hover:bg-purple-950/30 border border-slate-800 hover:border-purple-500/40 text-sm transition group">
                                 <div class="flex items-center gap-3">
-                                    <span class="font-extrabold text-xs text-purple-400 w-6">#{{ $player->rank }}</span>
-                                    <span class="font-semibold text-white font-mono">{{ $player->gamertag }}</span>
+                                    <span class="font-extrabold text-xs text-purple-400 w-6 group-hover:text-amber-400">#{{ $player->rank }}</span>
+                                    <div class="w-6 h-6 rounded-md bg-slate-800 overflow-hidden flex-shrink-0">
+                                        <img src="https://mc-heads.net/avatar/{{ rawurlencode($player->gamertag) }}/24"
+                                             alt="{{ $player->gamertag }}"
+                                             onerror="this.style.display='none'"
+                                             class="w-full h-full object-cover pixelated" />
+                                    </div>
+                                    <span class="font-semibold text-white font-mono group-hover:text-purple-300 transition">{{ $player->gamertag }}</span>
                                 </div>
                                 <span class="text-cyan-400 font-mono text-xs font-bold">{{ $player->rating }} ELO</span>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 </div>
@@ -275,7 +305,7 @@
                     All clan wars, UHC tournaments, bracket announcements, and player matchmaking take place on Discord. Get roles, organize scrims, and interact with the staff team.
                 </p>
                 <div class="pt-2">
-                    <a href="{{ $settings['discord_invite_url'] ?? 'https://discord.gg/hydepvp' }}"
+                    <a href="{{ $settings['discord_invite_url'] ?? 'https://discord.gg/VYp7Khvf' }}"
                        target="_blank" rel="noopener noreferrer"
                        class="btn-discord text-base py-3 px-8">
                         Join Discord Server
