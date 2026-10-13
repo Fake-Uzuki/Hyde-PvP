@@ -6,11 +6,13 @@ use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\RankingsController as AdminRankingsController;
 use App\Http\Controllers\Admin\RulesController as AdminRulesController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Admin\UhcWinnersController as AdminUhcWinnersController;
 use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PlayerProfileController;
 use App\Http\Controllers\RankingsController;
 use App\Http\Controllers\RulesController;
 use App\Http\Controllers\ServerInfoController;
@@ -27,6 +29,9 @@ Route::get('/news/{slug}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/server-info', [ServerInfoController::class, 'index'])->name('server-info');
 Route::get('/rules', [RulesController::class, 'index'])->name('rules');
 Route::get('/rankings', [RankingsController::class, 'index'])->name('rankings');
+Route::get('/players', [PlayerProfileController::class, 'index'])->name('players.index');
+Route::get('/players/{gamertag}', [PlayerProfileController::class, 'show'])->name('players.show');
+Route::get('/api/server-status', [ServerInfoController::class, 'statusJson'])->name('api.server-status');
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +92,9 @@ Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->name('admi
         Route::post('/rankings/clans', [AdminRankingsController::class, 'storeClan'])->name('rankings.clans.store');
         Route::put('/rankings/clans/{clan}', [AdminRankingsController::class, 'updateClan'])->name('rankings.clans.update');
         Route::delete('/rankings/clans/{clan}', [AdminRankingsController::class, 'destroyClan'])->name('rankings.clans.destroy');
+
+        // UHC Tournament Winners Management
+        Route::resource('uhc', AdminUhcWinnersController::class)->except(['show']);
 
         // Site Settings Management
         Route::get('/settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
