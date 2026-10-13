@@ -1,0 +1,11 @@
+# HYDE PVP Verification Plugin Configuration
+# Set this to your website's API endpoint.
+# When testing locally on the same PC:
+# web_api_url: "http://127.0.0.1:8000/api/server/verify-player"
+# When testing with ngrok:
+# web_api_url: "https://xxxx-xx-xx-xx.ngrok-free.app/api/server/verify-player"
+# For production:
+web_api_url: "http://127.0.0.1:8000/api/server/verify-player"
+
+# Secret key that matches HYDE_SERVER_KEY in your website .env
+server_key: "hyde-pvp-secret-key-19015"
