@@ -24,6 +24,15 @@ mkdir -p /var/www/html/storage/framework/cache
 mkdir -p /var/www/html/storage/logs
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
 
+# Configure HTTPS APP_URL and ASSET_URL for Render
+if [ -n "$RENDER_EXTERNAL_URL" ]; then
+    export APP_URL="$RENDER_EXTERNAL_URL"
+    export ASSET_URL="$RENDER_EXTERNAL_URL"
+elif [ -z "$APP_URL" ] || [ "$APP_URL" = "http://localhost" ]; then
+    export APP_URL="https://hyde-pvp.onrender.com"
+    export ASSET_URL="https://hyde-pvp.onrender.com"
+fi
+
 # Default to SQLite if DB_CONNECTION is empty or sqlite
 export DB_CONNECTION=${DB_CONNECTION:-sqlite}
 if [ "$DB_CONNECTION" = "sqlite" ]; then
