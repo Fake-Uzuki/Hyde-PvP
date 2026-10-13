@@ -619,8 +619,9 @@ function inGameVerifier() {
         },
 
         updateCountdownText() {
-            const m = Math.floor(this.expiresIn / 60);
-            const s = this.expiresIn % 60;
+            const total = Math.max(0, Math.floor(Number(this.expiresIn) || 0));
+            const m = Math.floor(total / 60);
+            const s = total % 60;
             this.countdownText = `${m}:${s < 10 ? '0' : ''}${s}`;
         },
 

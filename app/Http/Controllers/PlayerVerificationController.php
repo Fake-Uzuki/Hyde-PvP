@@ -28,7 +28,7 @@ class PlayerVerificationController extends Controller
             $activeCode = PlayerVerificationCode::generateForUser($user, 15);
         }
 
-        $remainingSeconds = max(0, now()->diffInSeconds($activeCode->expires_at, false));
+        $remainingSeconds = (int) max(0, now()->diffInSeconds($activeCode->expires_at, false));
 
         if ($request->wantsJson()) {
             return response()->json([
