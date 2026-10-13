@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: hydepvp-web
+    runtime: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: APP_NAME
+        value: "HYDE PVP"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: HYDE_SERVER_KEY
+        value: "hyde-pvp-secret-key-19015"
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: RUN_MIGRATIONS
+        value: "true"
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: cookie
