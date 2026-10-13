@@ -33,12 +33,15 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'minecraft_gamertag' => ['nullable', 'string', 'max:32', 'regex:/^[a-zA-Z0-9_ ]+$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'role' => 'member', // Strictly enforce member role on registration
+            'minecraft_gamertag' => $request->minecraft_gamertag ? trim($request->minecraft_gamertag) : null,
             'password' => Hash::make($request->password),
         ]);
 
