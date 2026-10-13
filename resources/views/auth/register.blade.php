@@ -16,6 +16,17 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Minecraft Gamertag (Optional & Unverified) -->
+        <div class="mt-4">
+            <div class="flex items-center justify-between">
+                <x-input-label for="minecraft_gamertag" :value="__('Minecraft Bedrock Gamertag')" />
+                <span class="text-[11px] text-slate-400">Optional & Unverified</span>
+            </div>
+            <x-text-input id="minecraft_gamertag" class="block mt-1 w-full font-mono" type="text" name="minecraft_gamertag" :value="old('minecraft_gamertag')" placeholder="e.g. ShadowPvP_99" />
+            <p class="text-[11px] text-slate-500 mt-1">Entering a gamertag does not prove account ownership.</p>
+            <x-input-error :messages="$errors->get('minecraft_gamertag')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />

@@ -47,6 +47,28 @@
             @endif
         </div>
 
+        <!-- Role (Read-only) -->
+        <div>
+            <x-input-label :value="__('Account Role')" />
+            <div class="mt-1 flex items-center gap-2">
+                <span class="px-3 py-1.5 rounded-lg bg-purple-950/50 border border-purple-800/40 text-purple-300 font-bold text-xs uppercase tracking-wider font-mono">
+                    {{ $user->role }}
+                </span>
+                <span class="text-xs text-slate-500">Managed by server administrators</span>
+            </div>
+        </div>
+
+        <!-- Minecraft Gamertag (Optional & Unverified) -->
+        <div>
+            <div class="flex items-center justify-between">
+                <x-input-label for="minecraft_gamertag" :value="__('Minecraft Bedrock Gamertag')" />
+                <span class="text-[11px] text-slate-400">Optional & Unverified</span>
+            </div>
+            <x-text-input id="minecraft_gamertag" name="minecraft_gamertag" type="text" class="mt-1 block w-full font-mono" :value="old('minecraft_gamertag', $user->minecraft_gamertag)" placeholder="e.g. ShadowPvP_99" />
+            <p class="text-[11px] text-slate-500 mt-1">Entering a gamertag does not prove account ownership.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('minecraft_gamertag')" />
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

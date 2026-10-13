@@ -1,3 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-[#070A12] text-slate-100 font-sans antialiased selection:bg-purple-600 selection:text-white min-h-screen;
+    }
+
+    /* Custom dark scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #070A12;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #1E293B;
+        border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #9333EA;
+    }
+}
+
+@layer components {
+    .gaming-card {
+        @apply bg-[#0D1424]/90 backdrop-blur-md border border-slate-800/80 rounded-2xl transition-all duration-300;
+    }
+
+    .gaming-card:hover {
+        @apply border-purple-500/40 shadow-neon-purple;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 shadow-lg shadow-purple-600/30 transition-all duration-200 active:scale-95;
+    }
+
+    .btn-discord {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-[#5865F2] hover:bg-[#4752C4] shadow-lg shadow-indigo-600/30 transition-all duration-200 active:scale-95;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-slate-200 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 hover:border-slate-600 transition-all duration-200 active:scale-95;
+    }
+
+    .gaming-gradient-text {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-fuchsia-400 to-pink-400;
+    }
+
+    .ice-gradient-text {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-200 to-sky-400;
+    }
+}
