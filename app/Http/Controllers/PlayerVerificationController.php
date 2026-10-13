@@ -76,11 +76,21 @@ class PlayerVerificationController extends Controller
         }
 
         // 2. Validate input
-        $validated = $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'code' => ['required', 'string'],
             'gamertag' => ['required', 'string', 'max:32'],
             'xuid' => ['nullable', 'string', 'max:32'],
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $validated = $validator->validated();
 
         $code = trim($validated['code']);
         $gamertag = trim($validated['gamertag']);
