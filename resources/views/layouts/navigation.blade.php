@@ -64,8 +64,8 @@
                     <div class="relative" x-data="{ userMenu: false }">
                         <button @click="userMenu = !userMenu"
                                 class="flex items-center gap-2.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500/50 text-slate-200 text-sm font-medium transition focus:outline-none">
-                            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-fuchsia-600 flex items-center justify-center font-bold text-white text-xs shadow-sm">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            <div class="w-8 h-8 rounded-lg bg-slate-900 border border-purple-500/40 flex items-center justify-center font-bold text-white text-xs shadow-sm overflow-hidden shrink-0">
+                                <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover pixelated" />
                             </div>
                             <div class="text-left hidden lg:block">
                                 <div class="text-xs font-bold leading-tight">{{ Auth::user()->name }}</div>
@@ -176,9 +176,14 @@
 
         <div class="pt-4 border-t border-slate-800">
             @auth
-                <div class="px-3 py-2 mb-2 bg-slate-900 rounded-xl">
-                    <p class="font-bold text-white text-sm">{{ Auth::user()->name }}</p>
-                    <p class="text-xs text-purple-400 capitalize">{{ Auth::user()->role }}</p>
+                <div class="px-3 py-2 mb-2 bg-slate-900 rounded-xl flex items-center gap-3 border border-slate-800">
+                    <div class="w-9 h-9 rounded-lg bg-slate-800 border border-purple-500/40 overflow-hidden shrink-0">
+                        <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover pixelated" />
+                    </div>
+                    <div>
+                        <p class="font-bold text-white text-sm">{{ Auth::user()->name }}</p>
+                        <p class="text-xs text-purple-400 capitalize">{{ Auth::user()->role }}</p>
+                    </div>
                 </div>
 
                 @if(Auth::user()->isStaff())

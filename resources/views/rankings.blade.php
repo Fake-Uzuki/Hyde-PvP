@@ -129,7 +129,7 @@
                                            class="inline-flex items-center gap-2.5 hover:text-purple-300 transition group"
                                            title="View {{ $player->gamertag }}'s combat profile">
                                             <div class="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700/80 overflow-hidden flex items-center justify-center text-[10px] text-cyan-300 shrink-0">
-                                                <img src="https://mc-heads.net/avatar/{{ rawurlencode($player->gamertag) }}/28"
+                                                <img src="{{ \App\Services\PlayerAvatarService::getAvatarUrl($player->gamertag, 28) }}"
                                                      alt="{{ $player->gamertag }}"
                                                      onerror="this.style.display='none'"
                                                      class="w-full h-full object-cover pixelated" />

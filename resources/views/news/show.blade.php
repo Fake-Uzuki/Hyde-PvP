@@ -185,8 +185,12 @@
                     <div class="gaming-card p-5 space-y-3">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-700 to-fuchsia-600 flex items-center justify-center font-bold text-white text-xs">
-                                    {{ strtoupper(substr($comment->user->name ?? 'P', 0, 1)) }}
+                                <div class="w-8 h-8 rounded-lg bg-slate-900 border border-purple-500/40 overflow-hidden flex items-center justify-center font-bold text-white text-xs shrink-0">
+                                    @if($comment->user)
+                                        <img src="{{ $comment->user->avatar_url }}" alt="{{ $comment->user->name }}" class="w-full h-full object-cover pixelated" />
+                                    @else
+                                        <span>?</span>
+                                    @endif
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white flex items-center gap-1.5">

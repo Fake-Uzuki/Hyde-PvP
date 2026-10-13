@@ -258,7 +258,7 @@
                                 <div class="flex items-center gap-3">
                                     <span class="font-extrabold text-xs text-purple-400 w-6 group-hover:text-amber-400">#{{ $player->rank }}</span>
                                     <div class="w-6 h-6 rounded-md bg-slate-800 overflow-hidden flex-shrink-0">
-                                        <img src="https://mc-heads.net/avatar/{{ rawurlencode($player->gamertag) }}/24"
+                                        <img src="{{ \App\Services\PlayerAvatarService::getAvatarUrl($player->gamertag, 24) }}"
                                              alt="{{ $player->gamertag }}"
                                              onerror="this.style.display='none'"
                                              class="w-full h-full object-cover pixelated" />
