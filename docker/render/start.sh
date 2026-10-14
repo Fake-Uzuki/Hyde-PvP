@@ -33,7 +33,26 @@ elif [ -z "$APP_URL" ] || [ "$APP_URL" = "http://localhost" ]; then
     export ASSET_URL="https://hyde-pvp.onrender.com"
 fi
 
-# Default to SQLite if DB_CONNECTION is empty or sqlite
+# Auto-detect Clever Cloud MySQL or PostgreSQL or external DB
+if [ -n "$MYSQL_ADDON_HOST" ] || [ -n "$MYSQL_ADDON_URI" ] || [ "$DB_CONNECTION" = "mysql" ]; then
+    export DB_CONNECTION=mysql
+    echo "==> Detected MySQL database connection (Clever Cloud / external)."
+elif [ -n "$POSTGRESQL_ADDON_HOST" ] || [ -n "$POSTGRESQL_ADDON_URI" ] || [ "$DB_CONNECTION" = "pgsql" ]; then
+    export DB_CONNECTION=pgsql
+    echo "==> Detected PostgreSQL database connection (Clever Cloud / Render)."
+elif [ -n "$DATABASE_URL" ]; then
+    if [[ "$DATABASE_URL" == postgres* ]]; then
+        export DB_CONNECTION=pgsql
+    else
+        export DB_CONNECTION=mysql
+    fi
+    echo "==> Detected DATABASE_URL connection ($DB_CONNECTION)."
+elif [ -n "$DB_HOST" ] && [ "$DB_HOST" != "127.0.0.1" ] && [ "$DB_HOST" != "localhost" ]; then
+    export DB_CONNECTION=mysql
+    echo "==> Detected external DB_HOST connection ($DB_HOST)."
+fi
+
+# Fallback to SQLite only if DB_CONNECTION is still unset or explicitly sqlite
 export DB_CONNECTION=${DB_CONNECTION:-sqlite}
 if [ "$DB_CONNECTION" = "sqlite" ]; then
     export DB_DATABASE=${DB_DATABASE:-/var/www/html/database/database.sqlite}
@@ -42,6 +61,8 @@ if [ "$DB_CONNECTION" = "sqlite" ]; then
         touch "$DB_DATABASE"
     fi
     chown www-data:www-data "$DB_DATABASE"
+else
+    echo "==> Using persistent cloud database ($DB_CONNECTION)."
 fi
 
 # Ensure APP_KEY exists
