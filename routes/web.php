@@ -41,7 +41,7 @@ Route::post('/api/server/verify-player', [\App\Http\Controllers\PlayerVerificati
 |--------------------------------------------------------------------------
 */
 Route::post('/news/{post:slug}/comments', [CommentController::class, 'store'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('comments.store');
 
 /*

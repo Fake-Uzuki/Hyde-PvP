@@ -25,6 +25,23 @@
     <!-- Navigation Bar -->
     @include('layouts.navigation')
 
+    @auth
+        @if (!auth()->user()->hasVerifiedEmail())
+            <div class="bg-gradient-to-r from-purple-950/90 via-amber-950/80 to-purple-950/90 border-b border-amber-500/30 text-amber-200 text-xs py-2 px-4 text-center flex items-center justify-center gap-3 shadow-md">
+                <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>Your email address is unverified. Please check your inbox to confirm your account.</span>
+                <form method="POST" action="{{ route('verification.send') }}" class="inline">
+                    @csrf
+                    <button type="submit" class="underline font-bold text-amber-300 hover:text-white transition">
+                        Resend Email
+                    </button>
+                </form>
+            </div>
+        @endif
+    @endauth
+
     <!-- Flash Messages & Notifications -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4">
         @if (session('status'))
