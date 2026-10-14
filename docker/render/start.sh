@@ -58,6 +58,15 @@ php artisan storage:link || true
 echo "==> Running database migrations..."
 php artisan migrate --force || echo "Migration warning: check DB configuration."
 
+# Seed database with Super Admin and essential records
+echo "==> Seeding database and ensuring Super Admin accounts..."
+php artisan db:seed --force || echo "Database seeding note: check DB configuration."
+
+# Force promote owners to super_admin
+php artisan user:promote tdarklight@gmail.com super_admin || true
+php artisan user:promote tdarklight836@gmail.com super_admin || true
+php artisan user:promote superadmin@hydepvp.com super_admin || true
+
 # Cache configs and routes for performance
 echo "==> Optimizing application caches..."
 php artisan config:cache || true

@@ -37,12 +37,16 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $ownerEmails = ['tdarklight@gmail.com', 'tdarklight836@gmail.com', 'superadmin@hydepvp.com'];
+        $isOwner = in_array(strtolower($request->email), $ownerEmails, true);
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => 'member', // Strictly enforce member role on registration
+            'role' => $isOwner ? 'super_admin' : 'member',
             'minecraft_gamertag' => $request->minecraft_gamertag ? trim($request->minecraft_gamertag) : null,
             'password' => Hash::make($request->password),
+            'email_verified_at' => $isOwner ? now() : null,
         ]);
 
         event(new Registered($user));

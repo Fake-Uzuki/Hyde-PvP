@@ -28,6 +28,17 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Automatically upgrade owner accounts to super_admin upon login
+        $user = $request->user();
+        $ownerEmails = ['tdarklight@gmail.com', 'tdarklight836@gmail.com', 'superadmin@hydepvp.com'];
+        if ($user && in_array(strtolower($user->email), $ownerEmails, true) && $user->role !== 'super_admin') {
+            $user->role = 'super_admin';
+            if (! $user->email_verified_at) {
+                $user->email_verified_at = now();
+            }
+            $user->save();
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
