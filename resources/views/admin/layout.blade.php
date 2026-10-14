@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <title>{{ $title ?? 'Admin Dashboard' }} — HYDE PVP Management</title>
+    <title>@hasSection('title')@yield('title') | HYDE PVP@elseif(isset($title) && !empty($title)){{ $title }} | HYDE PVP@elseAdmin | HYDE PVP@endif</title>
     <link rel="icon" type="image/png" href="{{ asset('images/hyde-pvp-logo.png') }}">
 
     <!-- Fonts -->

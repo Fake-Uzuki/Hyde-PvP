@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('title', 'Home | HYDE PVP')
+
 @section('content')
 <div class="space-y-24 pb-16">
 

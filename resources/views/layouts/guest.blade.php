@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'HYDE PVP') }} — Authentication</title>
+        <title>{{ request()->routeIs('login') ? 'Login | HYDE PVP' : (request()->routeIs('register') ? 'Register | HYDE PVP' : (request()->routeIs('password.*') ? 'Reset Password | HYDE PVP' : (request()->routeIs('verification.*') ? 'Verify Email | HYDE PVP' : 'Authentication | HYDE PVP'))) }}</title>
 
         <link rel="icon" type="image/png" href="{{ asset('images/hyde-pvp-logo.png') }}">
 
