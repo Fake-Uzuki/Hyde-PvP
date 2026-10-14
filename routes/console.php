@@ -50,3 +50,19 @@ Artisan::command('player:verify {code} {gamertag=Uzuki} {--xuid=}', function (st
     return 0;
 })->purpose('Simulate an in-game /verify <code> command from the console for local testing');
 
+use Illuminate\Support\Facades\Schedule;
+
+/*
+|--------------------------------------------------------------------------
+| Automated System Backup Schedule
+|--------------------------------------------------------------------------
+| Scheduled to run daily at exactly 06:00 AM Philippine Standard Time (PHT, UTC+8).
+|
+*/
+Schedule::command('system:backup')
+    ->dailyAt('06:00')
+    ->timezone('Asia/Manila')
+    ->appendOutputTo(storage_path('logs/backup.log'))
+    ->name('daily-system-backup-ph');
+
+

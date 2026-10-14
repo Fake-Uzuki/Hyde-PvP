@@ -122,6 +122,14 @@
                     </svg>
                     User Accounts & Roles
                 </a>
+
+                <a href="{{ route('admin.backups.index') }}"
+                   class="flex items-center gap-3 px-4 py-2.5 rounded-xl transition {{ request()->routeIs('admin.backups.*') ? 'bg-purple-600/20 text-purple-300 border border-purple-500/30' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                    </svg>
+                    Database Backups
+                </a>
             @endif
         </nav>
 

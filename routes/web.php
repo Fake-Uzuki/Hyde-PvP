@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RulesController as AdminRulesController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\Admin\UhcWinnersController as AdminUhcWinnersController;
 use App\Http\Controllers\Admin\UsersController as AdminUsersController;
+use App\Http\Controllers\Admin\BackupController as AdminBackupController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
@@ -115,6 +116,13 @@ Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->name('admi
         Route::patch('/users/{user}/email', [AdminUsersController::class, 'updateEmail'])->name('users.email');
         Route::post('/users/{user}/unlink-gamertag', [AdminUsersController::class, 'unlinkGamertag'])->name('users.unlink-gamertag');
         Route::post('/users/{user}/toggle-suspension', [AdminUsersController::class, 'toggleSuspension'])->name('users.toggle-suspension');
+
+        // Database & System Backups
+        Route::get('/backups', [AdminBackupController::class, 'index'])->name('backups.index');
+        Route::post('/backups', [AdminBackupController::class, 'store'])->name('backups.store');
+        Route::get('/backups/download/{filename}', [AdminBackupController::class, 'download'])->name('backups.download');
+        Route::post('/backups/restore', [AdminBackupController::class, 'restore'])->name('backups.restore');
+        Route::delete('/backups/{filename}', [AdminBackupController::class, 'destroy'])->name('backups.destroy');
     });
 });
 
