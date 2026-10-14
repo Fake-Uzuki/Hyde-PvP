@@ -119,12 +119,19 @@
                                      onerror="this.style.display='none'"
                                      class="w-full h-full object-cover pixelated" />
                             </div>
-                            <span class="absolute -top-2 -right-2 text-xl" title="Reigning Champion">👑</span>
+                            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-amber-500/30 border border-amber-400/60 flex items-center justify-center text-amber-300 shadow-md" title="Reigning Champion">
+                                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                                </svg>
+                            </span>
                         </div>
 
                         <div class="space-y-1">
                             <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[11px] font-bold uppercase tracking-wider">
-                                <span>🏆</span> Reigning UHC Tournament Champion
+                                <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                                </svg>
+                                <span>Reigning UHC Tournament Champion</span>
                             </div>
                             <h2 class="text-2xl sm:text-3xl font-black text-white font-gaming">
                                 <a href="{{ route('players.show', $reigningUhcWinner->winner_gamertag) }}" class="hover:text-amber-300 transition">

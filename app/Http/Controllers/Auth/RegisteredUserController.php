@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class, new \App\Rules\LegitEmail],
             'minecraft_gamertag' => ['nullable', 'string', 'max:32', 'regex:/^[a-zA-Z0-9_ ]+$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);

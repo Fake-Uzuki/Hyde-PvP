@@ -19,8 +19,9 @@
                              class="w-full h-full object-cover pixelated rounded-xl" />
                     </div>
                     @if($user->hasCustomSkin())
-                        <span class="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 text-[10px] font-black uppercase tracking-wider" title="Custom Skin Active">
-                            Skin ✓
+                        <span class="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-md bg-emerald-500 text-slate-950 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-0.5" title="Custom Skin Active">
+                            <span>Skin</span>
+                            <svg class="w-3 h-3 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                         </span>
                     @endif
                 </div>
@@ -50,8 +51,11 @@
                             </a>
                         </div>
                     @else
-                        <p class="text-[11px] text-amber-400 pt-1">
-                            ⚠️ No Minecraft Bedrock gamertag linked yet. Add one below to link to leaderboard rankings.
+                        <p class="text-[11px] text-amber-400 pt-1 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <span>No Minecraft Bedrock gamertag linked yet. Add one below to link to leaderboard rankings.</span>
                         </p>
                     @endif
                 </div>
@@ -76,7 +80,9 @@
     @if(session('status') === 'profile-updated')
         <div class="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-sm flex items-center justify-between gap-3 shadow-lg">
             <div class="flex items-center gap-2">
-                <span>✓</span>
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
                 <span>Your profile information and skin preferences have been successfully updated.</span>
             </div>
             <span class="text-xs text-emerald-400 font-mono">Saved</span>
@@ -85,7 +91,9 @@
 
     @if(session('status') === 'password-updated')
         <div class="p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-sm flex items-center gap-2 shadow-lg">
-            <span>✓</span>
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
             <span>Your password has been changed securely.</span>
         </div>
     @endif
@@ -100,7 +108,10 @@
                 <div class="flex items-start justify-between border-b border-slate-800 pb-4">
                     <div>
                         <h2 class="text-lg font-bold text-white font-gaming flex items-center gap-2">
-                            <span>🎮</span> Minecraft Skin & Avatar Icon
+                            <svg class="w-5 h-5 text-purple-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Minecraft Skin & Avatar Icon</span>
                         </h2>
                         <p class="text-xs text-slate-400 mt-1">
                             Upload your official Minecraft skin file (.png) to display your head icon across rankings and account menus.
@@ -193,7 +204,10 @@
             <div class="gaming-card p-6 sm:p-8 space-y-6">
                 <div class="border-b border-slate-800 pb-4">
                     <h2 class="text-lg font-bold text-white font-gaming flex items-center gap-2">
-                        <span>👤</span> Profile Information
+                        <svg class="w-5 h-5 text-purple-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span>Profile Information</span>
                     </h2>
                     <p class="text-xs text-slate-400 mt-1">
                         Update your account details and linked Bedrock gamertag.
@@ -288,7 +302,10 @@
                 <div class="flex items-start justify-between border-b border-slate-800 pb-3">
                     <div>
                         <h2 class="text-base font-bold text-white font-gaming flex items-center gap-2">
-                            <span>🛡️</span> Bedrock Verification
+                            <svg class="w-5 h-5 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            <span>Bedrock Verification</span>
                         </h2>
                         <p class="text-xs text-slate-400 mt-0.5">
                             Verify in-game ownership on <span class="font-mono text-cyan-300">hydepvp.ultramc.co</span>
@@ -296,8 +313,9 @@
                     </div>
 
                     @if($user->is_verified)
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase">
-                            Verified ✓
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase inline-flex items-center gap-1">
+                            <svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                            <span>Verified</span>
                         </span>
                     @else
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase">
@@ -380,8 +398,11 @@
                         </div>
 
                         <!-- Success Celebratory Banner -->
-                        <div x-show="justVerified" x-cloak class="p-3 rounded-xl bg-emerald-950 border border-emerald-500 text-xs text-emerald-300 text-center font-bold" style="display: none;">
-                            🎉 Verified successfully in-game! Reloading...
+                        <div x-show="justVerified" x-cloak class="p-3 rounded-xl bg-emerald-950 border border-emerald-500 text-xs text-emerald-300 flex items-center justify-center gap-2 font-bold" style="display: none;">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Verified successfully in-game! Reloading...</span>
                         </div>
                     </div>
                 @endif
@@ -391,7 +412,10 @@
             <div class="gaming-card p-6 sm:p-8 space-y-6">
                 <div class="border-b border-slate-800 pb-4">
                     <h2 class="text-lg font-bold text-white font-gaming flex items-center gap-2">
-                        <span>🔒</span> Update Password
+                        <svg class="w-5 h-5 text-purple-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <span>Update Password</span>
                     </h2>
                     <p class="text-xs text-slate-400 mt-1">
                         Ensure your account uses a secure password to prevent unauthorized access.
@@ -441,7 +465,10 @@
             <div class="gaming-card p-6 sm:p-8 space-y-4 border border-rose-900/30" x-data="{ confirmingDeletion: false }">
                 <div class="border-b border-slate-800 pb-3">
                     <h2 class="text-base font-bold text-rose-400 font-gaming flex items-center gap-2">
-                        <span>⚠️</span> Danger Zone
+                        <svg class="w-5 h-5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <span>Danger Zone</span>
                     </h2>
                     <p class="text-xs text-slate-400 mt-1">
                         Permanently delete your HYDE PVP account and associated comment data.
@@ -531,7 +558,7 @@ function skinUploader() {
 
                 this.isInvalid = false;
                 this.errorMessage = '';
-                this.previewLabel = '✨ New Skin Selected (Ready to Save)';
+                this.previewLabel = 'New Skin Selected (Ready to Save)';
 
                 // Draw face + hat onto 64x64 canvas with pixelated rendering
                 const canvas = this.$refs.headCanvas;

@@ -189,31 +189,31 @@ class PlayerProfileService
                 'Nodebuff (PotPvP)' => [
                     'rating' => $rating,
                     'win_rate' => $winRate,
-                    'icon' => '🧪',
+                    'icon' => 'potion',
                     'style' => 'text-purple-400',
                 ],
                 'Boxing' => [
                     'rating' => max(800, $rating - 25),
                     'win_rate' => max(0, min(100, round($winRate * 0.96, 1))),
-                    'icon' => '🥊',
+                    'icon' => 'boxing',
                     'style' => 'text-amber-400',
                 ],
                 'Sumo' => [
                     'rating' => max(800, $rating + 15),
                     'win_rate' => max(0, min(100, round($winRate * 1.02, 1))),
-                    'icon' => '🥋',
+                    'icon' => 'sumo',
                     'style' => 'text-cyan-400',
                 ],
                 'Gapple' => [
                     'rating' => max(800, $rating - 10),
                     'win_rate' => max(0, min(100, round($winRate * 0.98, 1))),
-                    'icon' => '🍏',
+                    'icon' => 'gapple',
                     'style' => 'text-yellow-400',
                 ],
                 'Combo' => [
                     'rating' => max(800, $rating + 35),
                     'win_rate' => max(0, min(100, round($winRate * 1.04, 1))),
-                    'icon' => '⚡',
+                    'icon' => 'combo',
                     'style' => 'text-fuchsia-400',
                 ],
             ];

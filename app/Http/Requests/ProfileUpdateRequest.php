@@ -25,6 +25,7 @@ class ProfileUpdateRequest extends FormRequest
                 'email',
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
+                new \App\Rules\LegitEmail,
             ],
             'minecraft_gamertag' => ['nullable', 'string', 'max:32', 'regex:/^[a-zA-Z0-9_ ]+$/'],
             'skin' => ['nullable', 'file'],

@@ -105,10 +105,16 @@ Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->name('admi
         // Site Settings Management
         Route::get('/settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+    });
 
-        // RBAC User Roles Management
+    // Super Admin Exclusive Routes: Account Manipulation, Password Reset, Role Promotion
+    Route::middleware('role:super_admin')->group(function () {
         Route::get('/users', [AdminUsersController::class, 'index'])->name('users.index');
         Route::patch('/users/{user}/role', [AdminUsersController::class, 'updateRole'])->name('users.role');
+        Route::patch('/users/{user}/password', [AdminUsersController::class, 'updatePassword'])->name('users.password');
+        Route::patch('/users/{user}/email', [AdminUsersController::class, 'updateEmail'])->name('users.email');
+        Route::post('/users/{user}/unlink-gamertag', [AdminUsersController::class, 'unlinkGamertag'])->name('users.unlink-gamertag');
+        Route::post('/users/{user}/toggle-suspension', [AdminUsersController::class, 'toggleSuspension'])->name('users.toggle-suspension');
     });
 });
 

@@ -50,6 +50,18 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        /** @var \App\Models\User|null $user */
+        $user = Auth::user();
+        if ($user && $user->isSuspended()) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            $reason = $user->suspension_reason ? " Reason: {$user->suspension_reason}" : '';
+            throw ValidationException::withMessages([
+                'email' => "This account has been suspended by a Super Administrator.{$reason}",
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

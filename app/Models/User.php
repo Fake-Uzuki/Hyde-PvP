@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'minecraft_gamertag', 'is_verified', 'xuid', 'verified_at', 'skin_path', 'avatar_head_path'])]
+#[Fillable(['name', 'email', 'password', 'role', 'minecraft_gamertag', 'is_verified', 'xuid', 'verified_at', 'skin_path', 'avatar_head_path', 'is_suspended', 'suspension_reason', 'admin_notes'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -29,6 +29,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'verified_at' => 'datetime',
             'is_verified' => 'boolean',
+            'is_suspended' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -69,9 +70,14 @@ class User extends Authenticatable
         return !empty($this->avatar_head_path);
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return in_array($this->role, ['super_admin', 'admin'], true);
     }
 
     public function isModerator(): bool
@@ -86,7 +92,22 @@ class User extends Authenticatable
 
     public function isStaff(): bool
     {
-        return in_array($this->role, ['admin', 'moderator'], true);
+        return in_array($this->role, ['super_admin', 'admin', 'moderator'], true);
+    }
+
+    public function canManageRoles(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function canManageUsers(): bool
+    {
+        return $this->isSuperAdmin();
+    }
+
+    public function isSuspended(): bool
+    {
+        return (bool) $this->is_suspended;
     }
 
     public function hasRole(string|array $roles): bool

@@ -15,7 +15,10 @@
     <div class="gaming-card p-6 sm:p-8 space-y-6">
         <div>
             <h2 class="text-xl font-bold text-white font-gaming flex items-center gap-2">
-                <span>🏆</span> Publish Tournament Champion
+                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span>Publish Tournament Champion</span>
             </h2>
             <p class="text-xs text-slate-400 mt-1">
                 Enter tournament details. The champion's avatar and combat profile will be automatically linked on the leaderboards.
@@ -36,7 +39,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Winner Gamertag -->
                 <div>
-                    <label for="winner_gamertag" class="block text-xs uppercase font-bold text-amber-400 mb-1">🥇 Champion Gamertag *</label>
+                    <label for="winner_gamertag" class="block text-xs uppercase font-bold text-amber-400 mb-1">Champion Gamertag *</label>
                     <input type="text" name="winner_gamertag" id="winner_gamertag" value="{{ old('winner_gamertag') }}" required placeholder="e.g. Uzuki"
                            class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-4 py-3 text-sm text-amber-300 font-mono focus:outline-none focus:border-amber-500" />
                     @error('winner_gamertag') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror
@@ -52,7 +55,7 @@
 
                 <!-- Runner-Up Gamertag -->
                 <div>
-                    <label for="runner_up_gamertag" class="block text-xs uppercase font-bold text-slate-300 mb-1">🥈 Runner-Up Gamertag (Optional)</label>
+                    <label for="runner_up_gamertag" class="block text-xs uppercase font-bold text-slate-300 mb-1">Runner-Up Gamertag (Optional)</label>
                     <input type="text" name="runner_up_gamertag" id="runner_up_gamertag" value="{{ old('runner_up_gamertag') }}" placeholder="e.g. VortexKing"
                            class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-300 font-mono focus:outline-none focus:border-purple-500" />
                     @error('runner_up_gamertag') <p class="text-xs text-rose-400 mt-1">{{ $message }}</p> @enderror

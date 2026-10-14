@@ -9,7 +9,10 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h2 class="text-xl font-bold text-white font-gaming flex items-center gap-2">
-                <span>🏆</span> Tournament Hall of Fame
+                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <span>Tournament Hall of Fame</span>
             </h2>
             <p class="text-xs text-slate-400 mt-0.5">Post and manage official HYDE Bedrock UHC champions and tournament records.</p>
         </div>
@@ -24,8 +27,10 @@
 
     @if($tournaments->isEmpty())
         <div class="gaming-card p-12 text-center text-slate-400 space-y-3">
-            <div class="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-3xl mx-auto text-amber-500">
-                🏆
+            <div class="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-amber-500">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
             </div>
             <h3 class="text-lg font-bold text-white font-gaming">No UHC Tournament Winners Posted Yet</h3>
             <p class="text-xs text-slate-400 max-w-md mx-auto">
@@ -45,8 +50,8 @@
                         <tr>
                             <th class="py-4 px-6 font-bold">Tournament</th>
                             <th class="py-4 px-6 font-bold">Date & Mode</th>
-                            <th class="py-4 px-6 font-bold">🥇 Champion</th>
-                            <th class="py-4 px-6 font-bold">🥈 Runner-Up</th>
+                            <th class="py-4 px-6 font-bold">Champion</th>
+                            <th class="py-4 px-6 font-bold">Runner-Up</th>
                             <th class="py-4 px-6 font-bold">Prize</th>
                             <th class="py-4 px-6 font-bold text-right">Actions</th>
                         </tr>

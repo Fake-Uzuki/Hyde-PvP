@@ -35,8 +35,11 @@
                 type="button"
                 @click="activeTab = 'uhc'"
                 :class="activeTab === 'uhc' ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md' : 'text-slate-400 hover:text-white'"
-                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200">
-                🏆 UHC Champions
+                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 inline-flex items-center gap-2">
+                <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                </svg>
+                <span>UHC Champions</span>
             </button>
         </div>
     </div>
@@ -110,18 +113,21 @@
                                     <td class="py-4 px-6 font-extrabold text-sm font-gaming">
                                         @if($player->rank === 1)
                                             <span class="inline-flex items-center gap-1 text-amber-400 font-black">
-                                                ★ 1
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                1
                                             </span>
                                         @elseif($player->rank === 2)
                                             <span class="inline-flex items-center gap-1 text-slate-300 font-bold">
-                                                ★ 2
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                2
                                             </span>
                                         @elseif($player->rank === 3)
                                             <span class="inline-flex items-center gap-1 text-amber-600 font-bold">
-                                                ★ 3
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                3
                                             </span>
                                         @else
-                                            <span class="text-slate-400">#{{ $player->rank }}</span>
+                                            <span class="text-slate-400 font-mono">#{{ $player->rank }}</span>
                                         @endif
                                     </td>
                                     <td class="py-4 px-6 font-mono font-bold text-white">
@@ -196,13 +202,22 @@
                                 <tr class="hover:bg-fuchsia-950/20 transition-colors">
                                     <td class="py-4 px-6 font-extrabold text-sm font-gaming">
                                         @if($clan->rank === 1)
-                                            <span class="text-amber-400 font-black">★ 1</span>
+                                            <span class="inline-flex items-center gap-1 text-amber-400 font-black">
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                1
+                                            </span>
                                         @elseif($clan->rank === 2)
-                                            <span class="text-slate-300 font-bold">★ 2</span>
+                                            <span class="inline-flex items-center gap-1 text-slate-300 font-bold">
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                2
+                                            </span>
                                         @elseif($clan->rank === 3)
-                                            <span class="text-amber-600 font-bold">★ 3</span>
+                                            <span class="inline-flex items-center gap-1 text-amber-600 font-bold">
+                                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                                3
+                                            </span>
                                         @else
-                                            <span class="text-slate-400">#{{ $clan->rank }}</span>
+                                            <span class="text-slate-400 font-mono">#{{ $clan->rank }}</span>
                                         @endif
                                     </td>
                                     <td class="py-4 px-6 font-bold text-white">
@@ -246,7 +261,9 @@
         @if($uhcWinners->isEmpty())
             <div class="gaming-card p-16 text-center max-w-2xl mx-auto space-y-4">
                 <div class="w-16 h-16 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mx-auto text-amber-400">
-                    <span class="text-3xl">🏆</span>
+                    <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+                        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                    </svg>
                 </div>
                 <h3 class="text-xl font-bold text-white font-gaming">No UHC Tournament Champions Recorded Yet</h3>
                 <p class="text-xs text-slate-400 leading-relaxed">
@@ -273,7 +290,9 @@
                             <div class="flex items-start justify-between gap-2 border-b border-slate-800/80 pb-3">
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <span class="text-base">🏆</span>
+                                        <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                                        </svg>
                                         <span class="text-xs uppercase font-mono tracking-wider font-bold text-amber-400">
                                             {{ $winner->game_mode }}
                                         </span>
@@ -302,8 +321,11 @@
                                              class="w-full h-full object-cover pixelated" />
                                     </div>
                                     <div>
-                                        <span class="text-[10px] uppercase font-bold tracking-wider text-amber-400 flex items-center gap-1">
-                                            <span>👑</span> 1st Place Champion
+                                        <span class="text-[10px] uppercase font-bold tracking-wider text-amber-400 flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                                            </svg>
+                                            1st Place Champion
                                         </span>
                                         <a href="{{ route('players.show', $winner->winner_gamertag) }}"
                                            class="font-mono font-black text-white hover:text-amber-300 transition text-base block">
@@ -315,8 +337,11 @@
                                 @if($winner->winner_kills !== null)
                                     <div class="text-right">
                                         <span class="text-[10px] uppercase text-slate-400 block font-semibold">Kills</span>
-                                        <span class="font-mono font-bold text-rose-400 text-sm">
-                                            ⚔️ {{ $winner->winner_kills }}
+                                        <span class="font-mono font-bold text-rose-400 text-sm inline-flex items-center gap-1">
+                                            <svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                            {{ $winner->winner_kills }}
                                         </span>
                                     </div>
                                 @endif
@@ -333,7 +358,12 @@
                                                  class="w-full h-full object-cover pixelated" />
                                         </div>
                                         <div>
-                                            <span class="text-[10px] uppercase text-slate-400 font-bold block">🥈 2nd Place</span>
+                                            <span class="text-[10px] uppercase text-slate-400 font-bold flex items-center gap-1">
+                                                <svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="9"/>
+                                                </svg>
+                                                2nd Place
+                                            </span>
                                             <a href="{{ route('players.show', $winner->runner_up_gamertag) }}"
                                                class="font-mono font-bold text-slate-200 hover:text-purple-300 transition">
                                                 {{ $winner->runner_up_gamertag }}
@@ -346,7 +376,12 @@
                             <!-- Prize & Extra details -->
                             @if($winner->prize)
                                 <div class="text-xs text-slate-300 flex items-center gap-1.5 font-medium">
-                                    <span class="text-emerald-400">💰 Prize:</span>
+                                    <span class="text-emerald-400 flex items-center gap-1">
+                                        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Prize:
+                                    </span>
                                     <span>{{ $winner->prize }}</span>
                                 </div>
                             @endif

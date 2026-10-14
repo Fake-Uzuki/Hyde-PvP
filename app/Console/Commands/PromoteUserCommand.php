@@ -12,14 +12,14 @@ class PromoteUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'user:promote {email : The email address of the user} {role=admin : The target role (admin, moderator, member)}';
+    protected $signature = 'user:promote {email : The email address of the user} {role=admin : The target role (super_admin, admin, moderator, member)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Promote or change the RBAC role of a user safely';
+    protected $description = 'Promote or change the RBAC role of a user safely (super_admin, admin, moderator, member)';
 
     /**
      * Execute the console command.
@@ -29,7 +29,7 @@ class PromoteUserCommand extends Command
         $email = $this->argument('email');
         $role = strtolower((string) $this->argument('role'));
 
-        $validRoles = ['admin', 'moderator', 'member'];
+        $validRoles = ['super_admin', 'admin', 'moderator', 'member'];
         if (! in_array($role, $validRoles, true)) {
             $this->error("Invalid role '{$role}'. Allowed roles are: " . implode(', ', $validRoles));
             return self::FAILURE;

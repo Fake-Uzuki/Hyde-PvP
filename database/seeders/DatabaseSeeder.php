@@ -21,6 +21,21 @@ class DatabaseSeeder extends Seeder
             SiteSetting::firstOrCreate(['key' => $key], ['value' => $val]);
         }
 
+        // Create Super Administrator (Supreme authority)
+        $superAdmin = User::updateOrCreate(
+            ['email' => 'superadmin@hydepvp.com'],
+            [
+                'name' => 'HYDE Super Admin',
+                'password' => Hash::make('HydeSuperAdmin2026!'),
+                'role' => 'super_admin',
+                'minecraft_gamertag' => 'HydeOwner',
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Ensure user Uzuki (if exists) is also super_admin
+        User::where('email', 'tdarklight836@gmail.com')->update(['role' => 'super_admin']);
+
         // Create initial Administrator account
         $admin = User::firstOrCreate(
             ['email' => 'admin@hydepvp.net'],

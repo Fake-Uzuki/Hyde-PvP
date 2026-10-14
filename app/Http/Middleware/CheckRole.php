@@ -41,6 +41,11 @@ class CheckRole
             }
         }
 
+        // Super Admin has all admin and moderator capabilities
+        if ($user->role === 'super_admin') {
+            return $next($request);
+        }
+
         if (! in_array($user->role, $allowedRoles, true)) {
             abort(403, 'Access denied. You do not have the required permissions.');
         }

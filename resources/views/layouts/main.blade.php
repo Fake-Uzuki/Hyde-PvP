@@ -35,7 +35,11 @@
                     </svg>
                     <span class="text-sm font-medium">{{ session('status') }}</span>
                 </div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-purple-400 hover:text-white text-sm font-bold ml-4">✕</button>
+                <button type="button" onclick="this.parentElement.remove()" class="text-purple-400 hover:text-white ml-4" title="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         @endif
 
@@ -47,7 +51,11 @@
                     </svg>
                     <span class="text-sm font-medium">{{ session('error') }}</span>
                 </div>
-                <button type="button" onclick="this.parentElement.remove()" class="text-rose-400 hover:text-white text-sm font-bold ml-4">✕</button>
+                <button type="button" onclick="this.parentElement.remove()" class="text-rose-400 hover:text-white ml-4" title="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         @endif
 

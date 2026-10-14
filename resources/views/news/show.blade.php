@@ -40,7 +40,10 @@
             <div class="rounded-2xl overflow-hidden border border-cyan-500/30 bg-black shadow-2xl space-y-2">
                 <div class="p-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between text-xs text-cyan-300">
                     <span class="font-bold flex items-center gap-1.5">
-                        <span>🎥</span> Video Highlight
+                        <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <span>Video Highlight</span>
                     </span>
                     <span class="text-slate-400">Click to play</span>
                 </div>
@@ -61,7 +64,10 @@
             <div x-data="{ modalOpen: false, modalSrc: '' }" class="space-y-4 pt-6 border-t border-slate-800">
                 <div class="flex items-center justify-between">
                     <h3 class="text-sm font-bold uppercase tracking-wider text-purple-300 flex items-center gap-2">
-                        <span>📸</span> Photo Gallery ({{ count($post->image_urls) }})
+                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Photo Gallery ({{ count($post->image_urls) }})</span>
                     </h3>
                     <span class="text-xs text-slate-400">Click any image to view full size</span>
                 </div>
@@ -94,8 +100,11 @@
                      style="display: none;">
                     <div @click.away="modalOpen = false" class="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
                         <button @click="modalOpen = false"
-                                class="absolute -top-10 right-0 text-white hover:text-rose-400 text-sm font-bold uppercase tracking-wider flex items-center gap-1 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-700">
-                            ✕ Close
+                                class="absolute -top-10 right-0 text-white hover:text-rose-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-700">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span>Close</span>
                         </button>
                         <img :src="modalSrc" alt="Full Preview" class="max-w-full max-h-[85vh] object-contain rounded-2xl border border-purple-500/40 shadow-2xl" />
                     </div>

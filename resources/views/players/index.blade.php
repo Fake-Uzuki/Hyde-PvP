@@ -9,7 +9,10 @@
     <!-- Search Hero -->
     <div class="gaming-card relative overflow-hidden p-8 sm:p-12 text-center max-w-3xl mx-auto space-y-6">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase bg-purple-950/60 text-purple-300 border border-purple-800/40">
-            <span>🔍</span> Combatant Directory
+            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span>Combatant Directory</span>
         </div>
 
         <h1 class="text-3xl sm:text-5xl font-extrabold text-white font-gaming tracking-wide">
@@ -55,7 +58,10 @@
         <div class="space-y-6">
             <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                 <h2 class="text-xl font-extrabold text-white font-gaming flex items-center gap-2">
-                    <span>👑</span> Top Ranked Fighters
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <span>Top Ranked Fighters</span>
                 </h2>
                 <a href="{{ route('rankings') }}" class="text-xs font-bold text-purple-400 hover:text-purple-300">
                     View All Rankings →
