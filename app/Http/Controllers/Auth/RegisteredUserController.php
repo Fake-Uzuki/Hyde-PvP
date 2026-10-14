@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $ownerEmails = ['tdarklight@gmail.com', 'tdarklight836@gmail.com', 'superadmin@hydepvp.com'];
+        $ownerEmails = ['tdarklight@gmail.com', 'superadmin@hydepvp.com'];
         $isOwner = in_array(strtolower($request->email), $ownerEmails, true);
 
         $user = User::create([

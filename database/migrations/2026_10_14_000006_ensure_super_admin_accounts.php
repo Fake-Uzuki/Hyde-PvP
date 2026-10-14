@@ -23,8 +23,9 @@ return new class extends Migration
             ]
         );
 
-        // 2. Ensure owner account tdarklight@gmail.com and tdarklight836@gmail.com are super_admin
-        User::whereIn('email', ['tdarklight@gmail.com', 'tdarklight836@gmail.com'])
+        // 2. Ensure owner account tdarklight@gmail.com is super_admin and purge any duplicate
+        User::where('email', 'tdarklight836@gmail.com')->delete();
+        User::where('email', 'tdarklight@gmail.com')
             ->update([
                 'role' => 'super_admin',
                 'email_verified_at' => now(),

@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // Ensure user Uzuki (if exists) is also super_admin
-        User::whereIn('email', ['tdarklight@gmail.com', 'tdarklight836@gmail.com'])->update([
+        User::where('email', 'tdarklight@gmail.com')->update([
             'role' => 'super_admin',
             'email_verified_at' => now(),
         ]);
