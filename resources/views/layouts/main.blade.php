@@ -6,7 +6,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <title>@hasSection('title')@yield('title')@elseif(isset($title) && !empty($title)){{ $title }} | HYDE PVP@elseHYDE PVP@endif</title>
+    <title>
+        @hasSection('title')
+            @yield('title')
+        @elseif(isset($title) && !empty($title))
+            {{ $title }} | HYDE PVP
+        @else
+            HYDE PVP
+        @endif
+    </title>
     <meta name="description" content="{{ $metaDescription ?? 'HYDE PVP is the premier Minecraft Bedrock competitive PvP community. Join custom duel arenas, nodebuff, combo, and compete in our official season rankings.' }}">
 
     <!-- Favicon using official HYDE PVP logo -->
