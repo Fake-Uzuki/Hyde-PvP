@@ -16,13 +16,30 @@ if [ ! -f /var/www/html/.env ]; then
     cp /var/www/html/.env.example /var/www/html/.env
 fi
 
+# Configure PHP-FPM upload limits (up to 100MB for news images & videos)
+cat << 'EOF' > /usr/local/etc/php/conf.d/uploads.ini
+upload_max_filesize = 100M
+post_max_size = 105M
+memory_limit = 256M
+max_execution_time = 300
+max_input_time = 300
+EOF
+
 # Ensure directories and permissions exist
 mkdir -p /var/www/html/database
 mkdir -p /var/www/html/storage/framework/sessions
 mkdir -p /var/www/html/storage/framework/views
 mkdir -p /var/www/html/storage/framework/cache
+mkdir -p /var/www/html/storage/framework/cache/data
 mkdir -p /var/www/html/storage/logs
+mkdir -p /var/www/html/storage/app/public/news/images
+mkdir -p /var/www/html/storage/app/public/news/videos
+mkdir -p /var/www/html/storage/app/public/avatars
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+
+# Optimize Session & Cache drivers to avoid cross-region database latency bottlenecks
+export SESSION_DRIVER=${SESSION_DRIVER:-cookie}
+export CACHE_STORE=${CACHE_STORE:-file}
 
 # Configure HTTPS APP_URL and ASSET_URL for Render
 if [ -n "$RENDER_EXTERNAL_URL" ]; then
