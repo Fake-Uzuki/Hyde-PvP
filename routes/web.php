@@ -34,6 +34,8 @@ Route::get('/players', [PlayerProfileController::class, 'index'])->name('players
 Route::get('/players/{gamertag}', [PlayerProfileController::class, 'show'])->name('players.show');
 Route::get('/api/server-status', [ServerInfoController::class, 'statusJson'])->name('api.server-status');
 Route::post('/api/server/verify-player', [\App\Http\Controllers\PlayerVerificationController::class, 'verifyFromGame'])->name('api.server.verify-player');
+Route::post('/api/server/sync-rankings', [\App\Http\Controllers\Api\ServerRankingsController::class, 'sync'])->name('api.server.sync-rankings');
+Route::post('/api/server/update-player-score', [\App\Http\Controllers\Api\ServerRankingsController::class, 'updatePlayer'])->name('api.server.update-player-score');
 
 /*
 |--------------------------------------------------------------------------
