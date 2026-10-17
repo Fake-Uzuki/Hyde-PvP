@@ -26,6 +26,17 @@ class NewsController extends Controller
         return view('admin.news.create');
     }
 
+    protected function resolvePost(NewsPost $post): NewsPost
+    {
+        if (! $post->exists) {
+            $id = request()->route('post') ?? request()->route('news');
+            if ($id) {
+                return NewsPost::findOrFail($id);
+            }
+        }
+        return $post;
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -36,7 +47,9 @@ class NewsController extends Controller
             'is_published' => ['boolean'],
             'images' => ['nullable', 'array', 'max:5'],
             'images.*' => ['file', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:10240'], // 10MB max per image
+            'external_image_urls' => ['nullable', 'string'],
             'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/webm,video/quicktime,video/ogg', 'max:102400'], // 100MB max video
+            'external_video_url' => ['nullable', 'string', 'url', 'max:500'],
         ]);
 
         $slug = !empty($validated['slug'])
@@ -44,16 +57,29 @@ class NewsController extends Controller
             : Str::slug($validated['title']) . '-' . Str::random(5);
 
         $imagePaths = [];
+        // 1. Uploaded files
         if ($request->hasFile('images')) {
             $files = array_slice($request->file('images'), 0, 5);
             foreach ($files as $file) {
                 $imagePaths[] = $file->store('news/images', 'public');
             }
         }
+        // 2. External image URLs (optional)
+        if ($request->filled('external_image_urls')) {
+            $lines = preg_split('/[\r\n,]+/', $request->input('external_image_urls'));
+            foreach ($lines as $url) {
+                $url = trim($url);
+                if (!empty($url) && filter_var($url, FILTER_VALIDATE_URL) && count($imagePaths) < 5) {
+                    $imagePaths[] = $url;
+                }
+            }
+        }
 
         $videoPath = null;
         if ($request->hasFile('video')) {
             $videoPath = $request->file('video')->store('news/videos', 'public');
+        } elseif ($request->filled('external_video_url')) {
+            $videoPath = trim($request->input('external_video_url'));
         }
 
         NewsPost::create([
@@ -73,11 +99,14 @@ class NewsController extends Controller
 
     public function edit(NewsPost $post): View
     {
+        $post = $this->resolvePost($post);
         return view('admin.news.edit', compact('post'));
     }
 
     public function update(Request $request, NewsPost $post): RedirectResponse
     {
+        $post = $this->resolvePost($post);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:news_posts,slug,' . $post->id],
@@ -86,9 +115,11 @@ class NewsController extends Controller
             'is_published' => ['boolean'],
             'images' => ['nullable', 'array', 'max:5'],
             'images.*' => ['file', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:10240'],
+            'external_image_urls' => ['nullable', 'string'],
             'remove_images' => ['nullable', 'array'],
             'remove_images.*' => ['string'],
             'video' => ['nullable', 'file', 'mimetypes:video/mp4,video/webm,video/quicktime,video/ogg', 'max:102400'],
+            'external_video_url' => ['nullable', 'string', 'url', 'max:500'],
             'remove_video' => ['nullable', 'boolean'],
         ]);
 
@@ -106,7 +137,9 @@ class NewsController extends Controller
             foreach ($request->remove_images as $pathToRemove) {
                 if (($key = array_search($pathToRemove, $currentImages, true)) !== false) {
                     unset($currentImages[$key]);
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($pathToRemove);
+                    if (! Str::startsWith($pathToRemove, ['http://', 'https://'])) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($pathToRemove);
+                    }
                 }
             }
             $currentImages = array_values($currentImages);
@@ -121,19 +154,35 @@ class NewsController extends Controller
             }
         }
 
+        // Add external image URLs if provided
+        if ($request->filled('external_image_urls')) {
+            $lines = preg_split('/[\r\n,]+/', $request->input('external_image_urls'));
+            foreach ($lines as $url) {
+                $url = trim($url);
+                if (!empty($url) && filter_var($url, FILTER_VALIDATE_URL) && count($currentImages) < 5) {
+                    $currentImages[] = $url;
+                }
+            }
+        }
+
         $videoPath = $post->video_path;
         if ($request->boolean('remove_video')) {
-            if ($videoPath) {
+            if ($videoPath && ! Str::startsWith($videoPath, ['http://', 'https://'])) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($videoPath);
             }
             $videoPath = null;
         }
 
         if ($request->hasFile('video')) {
-            if ($videoPath) {
+            if ($videoPath && ! Str::startsWith($videoPath, ['http://', 'https://'])) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($videoPath);
             }
             $videoPath = $request->file('video')->store('news/videos', 'public');
+        } elseif ($request->filled('external_video_url')) {
+            if ($videoPath && ! Str::startsWith($videoPath, ['http://', 'https://'])) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($videoPath);
+            }
+            $videoPath = trim($request->input('external_video_url'));
         }
 
         $post->update([
@@ -152,13 +201,17 @@ class NewsController extends Controller
 
     public function destroy(NewsPost $post): RedirectResponse
     {
+        $post = $this->resolvePost($post);
+
         if (!empty($post->images) && is_array($post->images)) {
             foreach ($post->images as $img) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($img);
+                if (! Str::startsWith($img, ['http://', 'https://'])) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($img);
+                }
             }
         }
 
-        if (!empty($post->video_path)) {
+        if (!empty($post->video_path) && ! Str::startsWith($post->video_path, ['http://', 'https://'])) {
             \Illuminate\Support\Facades\Storage::disk('public')->delete($post->video_path);
         }
 

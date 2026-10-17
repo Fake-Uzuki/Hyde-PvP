@@ -82,7 +82,9 @@ Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->name('admi
     // Admin-Only Routes
     Route::middleware('role:admin')->group(function () {
         // News Management
-        Route::resource('news', AdminNewsController::class)->except(['show']);
+        Route::resource('news', AdminNewsController::class)
+            ->parameters(['news' => 'post'])
+            ->except(['show']);
 
         // Server Rules Management
         Route::get('/rules', [AdminRulesController::class, 'index'])->name('rules.index');
