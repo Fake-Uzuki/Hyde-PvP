@@ -24,6 +24,24 @@
         </div>
     </div>
 
+    <!-- Live Server Integration Info Card -->
+    <div class="p-4 rounded-xl bg-purple-950/30 border border-purple-500/30 text-xs text-slate-300 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center shrink-0 text-purple-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <div>
+                <span class="font-bold text-white block">Automatic In-Game Scoreboard Sync Active</span>
+                <span class="text-slate-400 text-[11px]">Your Bedrock server pushes kills & points directly to this leaderboard via <code class="text-purple-300 bg-slate-900 px-1 py-0.5 rounded">/syncrankings</code> or background timer.</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 self-end md:self-center shrink-0 font-mono text-[11px]">
+            <span class="text-slate-400">Endpoint: <code class="text-cyan-300 bg-slate-900 px-1.5 py-0.5 rounded">/api/server/sync-rankings</code></span>
+        </div>
+    </div>
+
     <!-- Players Tab -->
     <div x-show="tab === 'players'" class="space-y-6">
         <div class="flex justify-end">
