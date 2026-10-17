@@ -44,6 +44,9 @@ class NewsPost extends Model
         }
 
         return array_map(function ($path) {
+            if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+                return $path;
+            }
             return \Illuminate\Support\Facades\Storage::url($path);
         }, $this->images);
     }
@@ -57,7 +60,27 @@ class NewsPost extends Model
             return null;
         }
 
+        if (\Illuminate\Support\Str::startsWith($this->video_path, ['http://', 'https://'])) {
+            return $this->video_path;
+        }
+
         return \Illuminate\Support\Facades\Storage::url($this->video_path);
+    }
+
+    /**
+     * Extract YouTube Video ID if video_path is a YouTube link.
+     */
+    public function getYoutubeIdAttribute(): ?string
+    {
+        if (empty($this->video_path)) {
+            return null;
+        }
+
+        if (preg_match('/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/', $this->video_path, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
     }
 
     /**
