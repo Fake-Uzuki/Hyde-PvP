@@ -1,27 +1,29 @@
-/**
- * HYDE PVP - Bedrock Server In-Game Account Verification & Live Scoreboard Rankings Sync
- * For Minecraft Bedrock Dedicated Server (BDS) Scripting API
- * Uses @minecraft/server and @minecraft/server-net
- */
+import {
+    world,
+    system,
+    CustomCommandParamType,
+    CustomCommandStatus,
+    CommandPermissionLevel
+} from "@minecraft/server";
 
-import { world, system } from "@minecraft/server";
 import { http, HttpRequest, HttpRequestMethod, HttpHeader } from "@minecraft/server-net";
 
 const VERIFY_API_URL = "https://hyde-pvp.onrender.com/api/server/verify-player";
 const SYNC_RANKINGS_URL = "https://hyde-pvp.onrender.com/api/server/sync-rankings";
 const SERVER_KEY = "hyde-pvp-secret-key-19015";
+const SYNC_INTERVAL_TICKS = 3600; // 3 minutes
 
-// Periodic scoreboard sync interval (20 ticks = 1 sec, 3600 ticks = 3 minutes)
-const SYNC_INTERVAL_TICKS = 3600;
-
-console.warn("[HYDE PVP] Script API Bridge is initializing...");
+console.warn("[Hyde Bridge] Initializing player verification & live scoreboard sync...");
 
 /**
- * Perform Player Verification
+ * Handle account verification request
  */
-async function processVerification(player, code) {
+export async function verifyPlayerAccount(player, code) {
+    if (!player) return;
+
+    code = String(code || "").trim();
     if (!code) {
-        player.sendMessage("§e[HYDE] Usage: §b!verify <code> §7or §b/scriptevent hyde:verify <code>\n§7Get your 6-digit code from your profile on our website.");
+        player.sendMessage("§e[HYDE] Usage: §b/verify <code> §7or §b!verify <code>\n§7Get your 6-digit code from your profile on https://hyde-pvp.onrender.com");
         return;
     }
 
@@ -47,7 +49,8 @@ async function processVerification(player, code) {
 
         const response = await http.request(request);
         if (response.status === 200) {
-            const data = JSON.parse(response.body);
+            let data = {};
+            try { data = JSON.parse(response.body); } catch (_) {}
             player.sendMessage("§a========================================");
             player.sendMessage("§a✔ HYDE PVP ACCOUNT VERIFIED!");
             player.sendMessage(`§fLinked to website user: §b${data.user || "Your Account"}`);
@@ -61,47 +64,44 @@ async function processVerification(player, code) {
             player.sendMessage(`§c[HYDE] Verification failed: ${errorMsg}`);
         }
     } catch (err) {
-        player.sendMessage("§c[HYDE] Could not connect to verification server. Please check server internet connectivity.");
-        console.error(`[HYDE PVP] Verify Error: ${err}`);
+        player.sendMessage("§c[HYDE] Could not connect to verification server. Please check internet connection.");
+        console.error(`[Hyde Bridge] Verify error: ${err}`);
     }
 }
 
 /**
- * Collect scores from scoreboard objectives and transmit to website
+ * Collect scores from scoreboard and sync with website leaderboards
  */
-async function syncScoreboardsToWebsite(sender = null) {
+export async function syncScoreboardToWebsite(sender = null) {
     try {
         const scoreboard = world.scoreboard;
         if (!scoreboard) return;
 
-        // Detect common scoreboard objectives used for PvP stats
         const killsObj = scoreboard.getObjective("kills") || scoreboard.getObjective("Kills") || scoreboard.getObjective("kill");
         const pointsObj = scoreboard.getObjective("points") || scoreboard.getObjective("Points") || scoreboard.getObjective("score") || scoreboard.getObjective("Score") || scoreboard.getObjective("rating");
         const deathsObj = scoreboard.getObjective("deaths") || scoreboard.getObjective("Deaths") || scoreboard.getObjective("death");
         const winsObj = scoreboard.getObjective("wins") || scoreboard.getObjective("Wins");
 
-        const playersMap = {};
+        const playersList = [];
 
-        // 1. Check all online players
         for (const player of world.getAllPlayers()) {
-            const name = player.name;
-            if (!name) continue;
+            if (!player || !player.name) continue;
 
+            const name = player.name;
             const kills = killsObj ? (killsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
             const points = pointsObj ? (pointsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
             const deaths = deathsObj ? (deathsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
             const wins = winsObj ? (winsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
 
-            playersMap[name] = {
+            playersList.push({
                 gamertag: name,
                 kills: Math.max(0, kills),
                 points: Math.max(0, points),
                 deaths: Math.max(0, deaths),
                 wins: Math.max(0, wins),
-            };
+            });
         }
 
-        const playersList = Object.values(playersMap);
         if (playersList.length === 0) {
             if (sender) sender.sendMessage("§e[HYDE] No online players found to sync.");
             return;
@@ -124,99 +124,155 @@ async function syncScoreboardsToWebsite(sender = null) {
             if (sender) {
                 sender.sendMessage(`§a[HYDE] ✔ Synchronized ${playersList.length} player(s) to website leaderboards!`);
             }
-            console.warn(`[HYDE PVP] Successfully synced ${playersList.length} player(s) to website.`);
+            console.warn(`[Hyde Bridge] Synced ${playersList.length} player(s) to website.`);
         } else {
             if (sender) sender.sendMessage(`§c[HYDE] Sync failed: HTTP ${response.status}`);
         }
     } catch (err) {
         if (sender) sender.sendMessage("§c[HYDE] Error connecting to website API.");
-        console.error(`[HYDE PVP] Sync Error: ${err}`);
+        console.error(`[Hyde Bridge] Sync error: ${err}`);
     }
 }
 
-/**
- * Listen to vanilla /scriptevent commands
- * Vanilla Bedrock natively supports /scriptevent with zero client conflicts:
- * Usage:
- *   /scriptevent hyde:verify 123456
- *   /scriptevent hyde:sync
- */
+// ==========================================
+// 1. Custom Command Registration (Bedrock 1.21+)
+// ==========================================
+try {
+    if (system.beforeEvents && system.beforeEvents.startup) {
+        system.beforeEvents.startup.subscribe((event) => {
+            const registry = event.customCommandRegistry;
+            if (!registry) return;
+
+            // Register /verify <code>
+            try {
+                registry.registerCommand(
+                    {
+                        name: "verify",
+                        description: "Verify your Hyde PvP website profile with 6-digit code",
+                        permissionLevel: CommandPermissionLevel.Any,
+                        cheatsRequired: false,
+                        mandatoryParameters: [
+                            {
+                                name: "code",
+                                type: CustomCommandParamType.String
+                            }
+                        ]
+                    },
+                    (origin, code) => {
+                        const player = origin.sourceEntity;
+                        if (!player) return { status: CustomCommandStatus.Failure };
+                        system.run(async () => {
+                            await verifyPlayerAccount(player, code);
+                        });
+                        return { status: CustomCommandStatus.Success };
+                    }
+                );
+            } catch (e) {
+                console.warn(`[Hyde Bridge] Custom command /verify registration: ${e}`);
+            }
+
+            // Register /syncrankings
+            try {
+                registry.registerCommand(
+                    {
+                        name: "syncrankings",
+                        description: "Synchronize in-game scoreboard kills and points to website leaderboards",
+                        permissionLevel: CommandPermissionLevel.Operator,
+                        cheatsRequired: false
+                    },
+                    (origin) => {
+                        const player = origin.sourceEntity;
+                        system.run(async () => {
+                            await syncScoreboardToWebsite(player);
+                        });
+                        return { status: CustomCommandStatus.Success };
+                    }
+                );
+            } catch (e) {
+                console.warn(`[Hyde Bridge] Custom command /syncrankings registration: ${e}`);
+            }
+        });
+    }
+} catch (e) {
+    console.warn(`[Hyde Bridge] Startup event error: ${e}`);
+}
+
+// ==========================================
+// 2. Vanilla /scriptevent listeners
+// ==========================================
 system.afterEvents.scriptEventReceive.subscribe((event) => {
     const { id, message, sourceEntity } = event;
 
-    if (id === "hyde:verify") {
-        if (!sourceEntity || sourceEntity.typeId !== "minecraft:player") return;
+    if (id === "hyde:verify" || id === "verify") {
+        if (!sourceEntity) return;
         system.run(async () => {
-            await processVerification(sourceEntity, message.trim());
+            await verifyPlayerAccount(sourceEntity, message.trim());
         });
         return;
     }
 
     if (id === "hyde:sync" || id === "hyde:syncrankings") {
-        if (sourceEntity && sourceEntity.typeId === "minecraft:player") {
+        if (sourceEntity) {
             sourceEntity.sendMessage("§e[HYDE] Starting live scoreboard sync with website leaderboards...");
         }
         system.run(async () => {
-            await syncScoreboardsToWebsite(sourceEntity);
+            await syncScoreboardToWebsite(sourceEntity);
         });
         return;
     }
 });
 
-/**
- * Listen to chat commands
- * Supports:
- *   !verify <code>  or  .verify <code>  or  /verify <code>
- *   !syncrankings   or  .syncrankings   or  /syncrankings
- */
+// ==========================================
+// 3. In-Game Chat Listeners (!verify and /verify)
+// ==========================================
 world.beforeEvents.chatSend.subscribe((event) => {
     const raw = event.message.trim();
     const player = event.sender;
 
-    // Check for verify command
     const verifyPrefixes = ["!verify", ".verify", "-verify", "/verify"];
     for (const prefix of verifyPrefixes) {
         if (raw.toLowerCase().startsWith(prefix)) {
-            event.cancel = true; // prevent chat from being broadcast
+            event.cancel = true;
             const parts = raw.split(" ");
             const code = parts.length > 1 ? parts[1].trim() : "";
             system.run(async () => {
-                await processVerification(player, code);
+                await verifyPlayerAccount(player, code);
             });
             return;
         }
     }
 
-    // Check for sync command
     const syncPrefixes = ["!syncrankings", ".syncrankings", "-syncrankings", "/syncrankings", "!sync", ".sync"];
     for (const prefix of syncPrefixes) {
         if (raw.toLowerCase().startsWith(prefix)) {
             event.cancel = true;
             player.sendMessage("§e[HYDE] Starting live scoreboard sync with website leaderboards...");
             system.run(async () => {
-                await syncScoreboardsToWebsite(player);
+                await syncScoreboardToWebsite(player);
             });
             return;
         }
     }
 });
 
-/**
- * Notify player on spawn that the bridge is running
- */
+// ==========================================
+// 4. Welcome Message on Spawn
+// ==========================================
 world.afterEvents.playerSpawn.subscribe((event) => {
     if (event.initialSpawn && event.player) {
         system.runTimeout(() => {
             try {
-                event.player.sendMessage("§6[HYDE PVP] §7Server bridge connected! Verify account using §b!verify <code>");
+                event.player.sendMessage("§6[HYDE PVP] §7Server bridge connected! Verify account using §b/verify <code> §7or §b!verify <code>");
             } catch (_) {}
-        }, 40); // 2 seconds after spawn
+        }, 50);
     }
 });
 
-// Periodic background sync every 3 minutes
+// ==========================================
+// 5. Periodic Background Sync (Every 3 Mins)
+// ==========================================
 system.runInterval(() => {
-    syncScoreboardsToWebsite();
+    syncScoreboardToWebsite();
 }, SYNC_INTERVAL_TICKS);
 
-console.warn("[HYDE PVP] Script API Bridge loaded and running!");
+console.warn("[Hyde Bridge] Hyde Bridge initialized successfully!");

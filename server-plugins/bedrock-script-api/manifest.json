@@ -1,29 +1,33 @@
 {
-  "format_version": 2,
-  "header": {
-    "name": "Hyde PvP Verification",
-    "description": "In-Game /verify command for Hyde PvP account linking",
-    "uuid": "4c9e83b4-82a1-42e7-9195-2c8ebca98cf1",
-    "version": [1, 0, 0],
-    "min_engine_version": [1, 20, 0]
-  },
-  "modules": [
-    {
-      "type": "script",
-      "language": "javascript",
-      "uuid": "7f3d82a1-63b2-4ce5-8719-f9c3eb7d8e23",
-      "version": [1, 0, 0],
-      "entry": "scripts/main.js"
-    }
-  ],
-  "dependencies": [
-    {
-      "module_name": "@minecraft/server",
-      "version": "1.8.0"
+    "format_version": 2,
+    "header": {
+        "name": "Hyde PvP Verification & Rankings",
+        "description": "Live account verification and scoreboard sync for Hyde PvP",
+        "uuid": "4c9e83b4-82a1-42e7-9195-2c8ebca98cf1",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 26, 0]
     },
-    {
-      "module_name": "@minecraft/server-net",
-      "version": "1.0.0-beta"
-    }
-  ]
+    "modules": [
+        {
+            "type": "script",
+            "language": "javascript",
+            "uuid": "7f3d82a1-63b2-4ce5-8719-f9c3eb7d8e23",
+            "version": [1, 0, 0],
+            "entry": "scripts/main.js"
+        }
+    ],
+    "dependencies": [
+        {
+            "module_name": "@minecraft/server",
+            "version": "2.3.0"
+        },
+        {
+            "module_name": "@minecraft/server-ui",
+            "version": "2.0.0"
+        },
+        {
+            "module_name": "@minecraft/server-net",
+            "version": "1.0.0-beta"
+        }
+    ]
 }

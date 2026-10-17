@@ -1,73 +1,96 @@
 # HYDE PVP - In-Game Player Verification & Live Scoreboard Rankings
 
-This directory contains everything you need to connect your Minecraft Bedrock Server (`hydepvp.ultramc.co:19015`) to your live website (`https://hyde-pvp.onrender.com`).
+This guide explains how to connect your Minecraft Bedrock Server (`hydepvp.ultramc.co:19015`) to your live website (`https://hyde-pvp.onrender.com`).
 
 ---
 
-## 1. Why `/verify` Didn't Work Initially
+## 1. Root Cause Analysis (Why the Pack Was Not Working)
 
-Minecraft Bedrock (vanilla) does **not** come with a `/verify` command out of the box. 
+By inspecting your actual server behavior pack (`hydepvpzip.zip`), we identified the 3 reasons why the pack was failing on your server:
 
-When you type `/verify <code>`, Minecraft only recognizes it if the **HYDE PVP Server Bridge** (plugin or behavior pack) is installed in your Minecraft server's files on UltraMC!
-
----
-
-## 2. Features Included in this Bridge
-
-1. **Player Account Verification (`/verify <code>`)**:
-   - Links players' Bedrock Gamertag to their website profile.
-   - Grants the **Verified Player Badge** on the leaderboards.
-2. **Automatic Scoreboard Rankings Sync**:
-   - Reads your in-game scoreboard objectives (`kills`, `points`, `deaths`).
-   - Automatically posts scores to the website every **3–5 minutes**.
-   - Recalculates ranks (1st, 2nd, 3rd...) live on `/rankings` and the homepage top 5 leaderboard!
-3. **Manual Instant Sync Command (`/syncrankings`)**:
-   - Server operators/admins can type `/syncrankings` in-game to immediately update website leaderboards!
+1. **Dependency Version Mismatch (`@minecraft/server` 2.3.0 vs 1.8.0)**:
+   - Your server runs Bedrock 1.21+ / Preview engine (`1.26.0`) with `@minecraft/server: "2.3.0"`.
+   - The initial pack used `1.8.0`. When Bedrock Dedicated Server (BDS) sees conflicting script engine versions between two packs, it refuses to load the conflicting pack.
+2. **Missing `permissions.json` on Bedrock Dedicated Server**:
+   - The `@minecraft/server-net` module (which makes HTTP requests to your website) is **blocked by default** by BDS for security.
+   - BDS will abort loading any script that imports `@minecraft/server-net` unless it is explicitly allowed in `config/default/permissions.json`.
+3. **ZIP Path Separator on Linux Host (UltraMC)**:
+   - Windows zip tools used backslashes (`scripts\main.js`). UltraMC runs Linux, which caused the file to extract as a flat file in the root instead of inside the `scripts/` folder. All zip files are now rebuilt with Linux forward slashes (`scripts/main.js`).
 
 ---
 
-## 3. How to Install on UltraMC
+## 2. Solution: Choose Option 1 (Recommended) or Option 2
 
-### Option A: Bedrock Dedicated Server (BDS) / Geyser (Behavior Pack) — Recommended
-If your UltraMC server runs standard Bedrock:
-1. In your UltraMC file manager, navigate to:
-   ```text
-   /behavior_packs/
+### Option 1 (Recommended — 100% Guaranteed): Use the Unified Pack
+We integrated the verification and scoreboard sync directly into your existing **KitPvP** pack so you have **one single, unified pack** with no conflicts:
+
+* **File:** [`server-plugins/KitPvP_with_HydeVerify.zip`](file:///c:/Users/Cirunay/Desktop/laravel/p5/server-plugins/KitPvP_with_HydeVerify.zip) or [`server-plugins/KitPvP_with_HydeVerify.mcpack`](file:///c:/Users/Cirunay/Desktop/laravel/p5/server-plugins/KitPvP_with_HydeVerify.mcpack)
+* **What's inside:**
+  - All your original KitPvP features (kits, enchantments, potions, database, UI).
+  - Native `/verify <code>` command registered via Bedrock's `customCommandRegistry`.
+  - Native `/syncrankings` command.
+  - Automatic background sync every 3 minutes for `kills`, `points`, `deaths`.
+  - `/scriptevent hyde:verify` and `!verify <code>` fallback listeners.
+
+#### How to Install Option 1 on UltraMC:
+1. In your UltraMC file manager, go to your server root.
+2. Open `config/default/permissions.json` (or create it if it doesn't exist) and ensure it allows `@minecraft/server-net`:
+   ```json
+   {
+     "allowed_modules": [
+       "@minecraft/server-gametest",
+       "@minecraft/server",
+       "@minecraft/server-ui",
+       "@minecraft/server-admin",
+       "@minecraft/server-editor",
+       "@minecraft/server-net"
+     ]
+   }
    ```
-2. Upload the `hyde_verify.mcpack` (or extract `bedrock-script-api/` into `/behavior_packs/hyde_verify/`).
-3. Open `world_behavior_packs.json` inside your active world folder and add the pack UUID:
+3. In `/behavior_packs/`, replace your existing `KitPvP` folder with the contents of [`KitPvP_with_HydeVerify.zip`](file:///c:/Users/Cirunay/Desktop/laravel/p5/server-plugins/KitPvP_with_HydeVerify.zip).
+4. Restart your UltraMC server.
+
+---
+
+### Option 2: Standalone `hyde_verify` Pack
+If you want to keep `hyde_verify` as a separate behavior pack alongside your KitPvP pack:
+
+* **File:** [`server-plugins/hyde_verify.mcpack`](file:///c:/Users/Cirunay/Desktop/laravel/p5/server-plugins/hyde_verify.mcpack) (or [`server-plugins/hyde_verify_pack.zip`](file:///c:/Users/Cirunay/Desktop/laravel/p5/server-plugins/hyde_verify_pack.zip))
+* We updated it to match your server's exact dependencies (`@minecraft/server: "2.3.0"`, `@minecraft/server-ui: "2.0.0"`, `min_engine_version: [1, 26, 0]`).
+
+#### How to Install Option 2 on UltraMC:
+1. Ensure `config/default/permissions.json` has `@minecraft/server-net` (see Step 2 in Option 1).
+2. Upload and extract `hyde_verify_pack.zip` into `/behavior_packs/hyde_verify/`.
+3. In your world folder, add both packs to `world_behavior_packs.json`:
    ```json
    [
+     {
+       "pack_id": "9676a9f8-58d9-4491-8334-16672cb8e763",
+       "version": [1, 0, 0]
+     },
      {
        "pack_id": "4c9e83b4-82a1-42e7-9195-2c8ebca98cf1",
        "version": [1, 0, 0]
      }
    ]
    ```
-4. **Enable Beta APIs Experiment**:
-   - In Minecraft Bedrock BDS, JavaScript scripting (`@minecraft/server`) is only executed if the **Beta APIs** experimental toggle is enabled on your world.
-   - If using UltraMC world settings, toggle **Beta APIs** to ON.
-5. Restart your server.
-6. In game, run:
-   - Official Bedrock Command: `/scriptevent hyde:verify <code>`
-   - Or Chat Command: `!verify <code>`
-   - Scoreboard Sync: `/scriptevent hyde:sync` or `!syncrankings`
+4. Restart your UltraMC server.
 
 ---
 
-### Option B: PocketMine-MP (PHP Bedrock Server)
-If your UltraMC server runs PocketMine-MP:
-1. In your UltraMC file manager, go to `/plugins/`.
-2. Copy or upload the `pocketmine/` folder as `/plugins/HydeVerify/`.
-3. Open `/plugins/HydeVerify/config.yml` and ensure:
-   ```yaml
-   web_api_url: "https://hyde-pvp.onrender.com/api/server/verify-player"
-   sync_rankings_url: "https://hyde-pvp.onrender.com/api/server/sync-rankings"
-   server_key: "hyde-pvp-secret-key-19015"
-   sync_interval_minutes: 5
-   ```
-4. Run `/reload` or restart your server.
-5. In game, test `/verify <code>` and `/syncrankings`!
+## 3. How to Test In-Game
+
+1. **Test Verification Command:**
+   - Type: `/verify <code>`
+   - Or chat: `!verify <code>`
+   - Or: `/scriptevent hyde:verify <code>`
+   *(Get your 6-digit code from your profile on https://hyde-pvp.onrender.com)*
+
+2. **Test Scoreboard Sync:**
+   - Type: `/syncrankings`
+   - Or chat: `!syncrankings`
+   - Or: `/scriptevent hyde:sync`
+   - Visit https://hyde-pvp.onrender.com/rankings to see your kills and points live on the leaderboard!
 
 ---
 
