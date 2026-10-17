@@ -59,10 +59,20 @@
                 <p class="text-[11px] text-slate-400">
                     Max <strong>5 images</strong>, up to <strong>10MB</strong> per image (PNG, JPG, WEBP, GIF).
                 </p>
+                <div class="pt-1.5 border-t border-slate-800/80">
+                    <label for="external_image_urls" class="text-[11px] text-slate-400 font-medium block mb-1">
+                        Or External Image URLs (one per line):
+                    </label>
+                    <textarea name="external_image_urls" id="external_image_urls" rows="2" placeholder="https://i.imgur.com/example.png"
+                              class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500 font-mono">{{ old('external_image_urls') }}</textarea>
+                </div>
                 @error('images')
                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                 @enderror
                 @error('images.*')
+                    <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                @error('external_image_urls')
                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -73,14 +83,25 @@
                     <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <span>Video Highlight (Optional)</span>
+                    <span>Video Highlight (Upload or YouTube)</span>
                 </label>
                 <input type="file" name="video" id="video" accept="video/mp4,video/webm,video/quicktime,video/ogg"
                        class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cyan-600/20 file:text-cyan-300 hover:file:bg-cyan-600/30 file:cursor-pointer border border-slate-800 rounded-xl p-2 bg-[#070A12]" />
                 <p class="text-[11px] text-slate-400">
-                    Max <strong>1 video</strong>, up to <strong>100MB</strong> (MP4, WebM).
+                    Upload file (Max 100MB MP4/WebM)
                 </p>
+                <div class="pt-1.5 border-t border-slate-800/80">
+                    <label for="external_video_url" class="text-[11px] text-slate-400 font-medium block mb-1">
+                        Or YouTube Video URL / Direct Video Link:
+                    </label>
+                    <input type="url" name="external_video_url" id="external_video_url" value="{{ old('external_video_url') }}"
+                           placeholder="https://www.youtube.com/watch?v=... or https://cdn.example.com/clip.mp4"
+                           class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono" />
+                </div>
                 @error('video')
+                    <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                @error('external_video_url')
                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>

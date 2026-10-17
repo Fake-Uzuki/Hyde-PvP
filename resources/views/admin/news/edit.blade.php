@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <form method="POST" action="{{ route('admin.news.update', $post->id) }}" enctype="multipart/form-data" class="gaming-card p-6 sm:p-8 space-y-6">
+    <form method="POST" action="{{ route('admin.news.update', $post) }}" enctype="multipart/form-data" class="gaming-card p-6 sm:p-8 space-y-6">
         @csrf
         @method('PUT')
 
@@ -80,10 +80,20 @@
                 </label>
                 <input type="file" name="images[]" id="images" multiple accept="image/png,image/jpeg,image/webp,image/gif"
                        class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-purple-600/20 file:text-purple-300 hover:file:bg-purple-600/30 file:cursor-pointer border border-slate-800 rounded-xl p-2 bg-[#070A12]" />
+                <div class="pt-1.5 border-t border-slate-800/80">
+                    <label for="external_image_urls" class="text-[11px] text-slate-400 font-medium block mb-1">
+                        Or Add External Image URLs (one per line):
+                    </label>
+                    <textarea name="external_image_urls" id="external_image_urls" rows="2" placeholder="https://i.imgur.com/example.png"
+                              class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500 font-mono">{{ old('external_image_urls') }}</textarea>
+                </div>
                 @error('images')
                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                 @enderror
                 @error('images.*')
+                    <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                @error('external_image_urls')
                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -94,15 +104,21 @@
                     <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    <span>Video Attachment (Max 100MB)</span>
+                    <span>Video Attachment (Upload or YouTube)</span>
                 </label>
 
                 @if($post->video_path)
                     <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-                        <video controls class="w-full max-h-48 rounded-lg bg-black">
-                            <source src="{{ $post->video_url }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
+                        @if($post->youtube_id)
+                            <div class="aspect-video w-full max-h-48 rounded-lg overflow-hidden bg-black">
+                                <iframe class="w-full h-full" src="https://www.youtube-nocookie.com/embed/{{ $post->youtube_id }}" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                        @else
+                            <video controls class="w-full max-h-48 rounded-lg bg-black">
+                                <source src="{{ $post->video_url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        @endif
                         <label class="flex items-center gap-2 text-xs text-rose-300 cursor-pointer">
                             <input type="checkbox" name="remove_video" value="1" class="rounded bg-slate-900 border-slate-700 text-rose-500 h-4 w-4" />
                             <span>Remove current video</span>
@@ -113,9 +129,20 @@
                 <input type="file" name="video" id="video" accept="video/mp4,video/webm,video/quicktime,video/ogg"
                        class="block w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cyan-600/20 file:text-cyan-300 hover:file:bg-cyan-600/30 file:cursor-pointer border border-slate-800 rounded-xl p-2 bg-[#070A12]" />
                 <p class="text-[11px] text-slate-400">
-                    Select a new video to replace the existing one, or upload a new one. Max 100MB.
+                    Upload new video file (Max 100MB MP4/WebM).
                 </p>
+                <div class="pt-1.5 border-t border-slate-800/80">
+                    <label for="external_video_url" class="text-[11px] text-slate-400 font-medium block mb-1">
+                        Or YouTube Video URL / Direct Video Link:
+                    </label>
+                    <input type="url" name="external_video_url" id="external_video_url" value="{{ old('external_video_url', Str::startsWith($post->video_path, ['http://', 'https://']) ? $post->video_path : '') }}"
+                           placeholder="https://www.youtube.com/watch?v=... or https://cdn.example.com/clip.mp4"
+                           class="w-full bg-[#070A12] border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono" />
+                </div>
                 @error('video')
+                    <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                @error('external_video_url')
                     <p class="text-rose-400 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
