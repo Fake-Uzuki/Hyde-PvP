@@ -253,49 +253,106 @@
                 </div>
             </div>
         @else
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Players Preview -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Top Points Preview -->
                 <div class="gaming-card p-6">
-                    <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-                        Top Players
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2 font-gaming">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+                            Top Points
+                        </h3>
+                        <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-amber-950/40 border border-amber-500/30 text-amber-300 font-mono font-bold">
+                            Scoreboard
+                        </span>
+                    </div>
                     <div class="space-y-2">
-                        @foreach($topPlayers as $player)
+                        @foreach($topPoints as $player)
                             <a href="{{ route('players.show', $player->gamertag) }}"
                                class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 hover:bg-purple-950/30 border border-slate-800 hover:border-purple-500/40 text-sm transition group">
-                                <div class="flex items-center gap-3">
-                                    <span class="font-extrabold text-xs text-purple-400 w-6 group-hover:text-amber-400">#{{ $player->rank }}</span>
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="font-extrabold text-xs {{ $loop->iteration === 1 ? 'text-amber-400' : ($loop->iteration === 2 ? 'text-slate-300' : ($loop->iteration === 3 ? 'text-amber-600' : 'text-slate-500')) }} w-5">#{{ $loop->iteration }}</span>
                                     <div class="w-6 h-6 rounded-md bg-slate-800 overflow-hidden flex-shrink-0">
                                         <img src="{{ \App\Services\PlayerAvatarService::getAvatarUrl($player->gamertag, 24) }}"
                                              alt="{{ $player->gamertag }}"
                                              onerror="this.style.display='none'"
                                              class="w-full h-full object-cover pixelated" />
                                     </div>
-                                    <span class="font-semibold text-white font-mono group-hover:text-purple-300 transition">{{ $player->gamertag }}</span>
+                                    <span class="font-semibold text-white font-mono text-xs truncate group-hover:text-purple-300 transition">{{ $player->gamertag }}</span>
                                 </div>
-                                <span class="text-cyan-400 font-mono text-xs font-bold">{{ $player->rating }} ELO</span>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <span class="px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-[11px] font-bold" title="{{ $player->kills }} in-game kills">
+                                        {{ $player->kills }}k
+                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-300 font-mono text-xs font-bold" title="{{ $player->rating }} score points">
+                                        {{ $player->rating }} Pts
+                                    </span>
+                                </div>
                             </a>
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Clans Preview -->
+                <!-- Top Kills Preview -->
                 <div class="gaming-card p-6">
-                    <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-fuchsia-500"></span>
-                        Top Clans
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2 font-gaming">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></span>
+                            Top Kills
+                        </h3>
+                        <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-rose-950/40 border border-rose-500/30 text-rose-300 font-mono font-bold">
+                            Slayers
+                        </span>
+                    </div>
                     <div class="space-y-2">
-                        @foreach($topClans as $clan)
-                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-sm">
-                                <div class="flex items-center gap-3">
-                                    <span class="font-extrabold text-xs text-fuchsia-400 w-6">#{{ $clan->rank }}</span>
-                                    <span class="font-semibold text-white">[{{ $clan->tag }}] {{ $clan->name }}</span>
+                        @foreach($topKillers as $player)
+                            <a href="{{ route('players.show', $player->gamertag) }}"
+                               class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 hover:bg-rose-950/20 border border-slate-800 hover:border-rose-500/40 text-sm transition group">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="font-extrabold text-xs {{ $loop->iteration === 1 ? 'text-amber-400' : ($loop->iteration === 2 ? 'text-slate-300' : ($loop->iteration === 3 ? 'text-amber-600' : 'text-slate-500')) }} w-5">#{{ $loop->iteration }}</span>
+                                    <div class="w-6 h-6 rounded-md bg-slate-800 overflow-hidden flex-shrink-0">
+                                        <img src="{{ \App\Services\PlayerAvatarService::getAvatarUrl($player->gamertag, 24) }}"
+                                             alt="{{ $player->gamertag }}"
+                                             onerror="this.style.display='none'"
+                                             class="w-full h-full object-cover pixelated" />
+                                    </div>
+                                    <span class="font-semibold text-white font-mono text-xs truncate group-hover:text-rose-300 transition">{{ $player->gamertag }}</span>
                                 </div>
-                                <span class="text-fuchsia-300 font-mono text-xs font-bold">{{ $clan->score }} Pts</span>
-                            </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="text-slate-400 font-mono text-[11px]" title="K/D Ratio">{{ $player->kd_ratio }} K/D</span>
+                                    <span class="px-2.5 py-0.5 rounded bg-rose-500/20 border border-rose-500/40 text-rose-300 font-mono text-xs font-black" title="{{ $player->kills }} confirmed kills">
+                                        {{ $player->kills }} Kills
+                                    </span>
+                                </div>
+                            </a>
                         @endforeach
+                    </div>
+                </div>
+
+                <!-- Top Clans Preview -->
+                <div class="gaming-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-base font-bold text-white flex items-center gap-2 font-gaming">
+                            <span class="w-2.5 h-2.5 rounded-full bg-fuchsia-500 shadow-sm shadow-fuchsia-500/50"></span>
+                            Top Clans
+                        </h3>
+                        <span class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-fuchsia-950/40 border border-fuchsia-500/30 text-fuchsia-300 font-mono font-bold">
+                            Factions
+                        </span>
+                    </div>
+                    <div class="space-y-2">
+                        @forelse($topClans as $clan)
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-sm">
+                                <div class="flex items-center gap-2.5 min-w-0">
+                                    <span class="font-extrabold text-xs text-fuchsia-400 w-5">#{{ $clan->rank }}</span>
+                                    <span class="font-semibold text-white truncate text-xs">[{{ $clan->tag }}] {{ $clan->name }}</span>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded bg-fuchsia-500/15 border border-fuchsia-500/40 text-fuchsia-300 font-mono text-xs font-bold shrink-0">
+                                    {{ $clan->score }} Pts
+                                </span>
+                            </div>
+                        @empty
+                            <p class="text-xs text-slate-500 text-center py-6">No clans registered yet.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>

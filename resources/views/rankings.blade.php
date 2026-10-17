@@ -18,26 +18,42 @@
         </p>
 
         <!-- Tab Controls -->
-        <div class="inline-flex p-1.5 rounded-2xl bg-slate-900 border border-slate-800 shadow-inner mt-4 flex-wrap justify-center gap-1">
+        <div class="inline-flex p-1.5 rounded-2xl bg-slate-900 border border-slate-800 shadow-inner mt-4 flex-wrap justify-center gap-1.5">
             <button
                 type="button"
                 @click="activeTab = 'players'"
                 :class="activeTab === 'players' ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md' : 'text-slate-400 hover:text-white'"
-                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200">
-                Top Players
+                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200">
+                Official Rankings
+            </button>
+            <button
+                type="button"
+                @click="activeTab = 'points'"
+                :class="activeTab === 'points' ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-black shadow-md shadow-amber-500/20' : 'text-slate-400 hover:text-white'"
+                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                Top Points
+            </button>
+            <button
+                type="button"
+                @click="activeTab = 'kills'"
+                :class="activeTab === 'kills' ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white font-black shadow-md shadow-rose-600/20' : 'text-slate-400 hover:text-white'"
+                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 inline-flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                Top Kills
             </button>
             <button
                 type="button"
                 @click="activeTab = 'clans'"
                 :class="activeTab === 'clans' ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md' : 'text-slate-400 hover:text-white'"
-                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200">
+                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200">
                 Top Clans
             </button>
             <button
                 type="button"
                 @click="activeTab = 'uhc'"
                 :class="activeTab === 'uhc' ? 'bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow-md' : 'text-slate-400 hover:text-white'"
-                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 inline-flex items-center gap-2">
+                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all duration-200 inline-flex items-center gap-2">
                 <svg class="w-4 h-4 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
                 </svg>
@@ -103,9 +119,11 @@
                                 <th class="py-4 px-6 font-bold">Rank</th>
                                 <th class="py-4 px-6 font-bold">Gamertag</th>
                                 <th class="py-4 px-6 font-bold">Clan</th>
-                                <th class="py-4 px-6 font-bold text-right">Rating (ELO)</th>
-                                <th class="py-4 px-6 font-bold text-right">W / L</th>
+                                <th class="py-4 px-6 font-bold text-right text-amber-300">Points</th>
+                                <th class="py-4 px-6 font-bold text-right text-rose-400">Kills</th>
+                                <th class="py-4 px-6 font-bold text-right">Deaths</th>
                                 <th class="py-4 px-6 font-bold text-right">K / D</th>
+                                <th class="py-4 px-6 font-bold text-right">W / L</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-800/80">
@@ -148,14 +166,180 @@
                                     <td class="py-4 px-6 text-xs text-purple-400 font-medium">
                                         {{ $player->clan ?: '—' }}
                                     </td>
-                                    <td class="py-4 px-6 text-right font-mono font-bold text-cyan-300">
-                                        {{ $player->rating }}
+                                    <td class="py-4 px-6 text-right font-mono font-bold">
+                                        <span class="px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 inline-block">
+                                            {{ $player->rating }} Pts
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono font-bold">
+                                        <span class="px-2.5 py-1 rounded-md bg-rose-500/10 border border-rose-500/30 text-rose-300 inline-block">
+                                            {{ $player->kills }}
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono text-xs text-slate-400">
+                                        {{ $player->deaths }}
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono text-xs {{ $player->kd_ratio >= 1.5 ? 'text-emerald-400 font-bold' : 'text-slate-300' }}">
+                                        {{ $player->kd_ratio }}
                                     </td>
                                     <td class="py-4 px-6 text-right font-mono text-xs text-slate-300">
                                         <span class="text-emerald-400">{{ $player->wins }}W</span> / <span class="text-rose-400">{{ $player->losses }}L</span>
                                     </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+    </div>
+
+    <!-- Top Points Leaderboard Tab -->
+    <div x-show="activeTab === 'points'" class="space-y-6" style="display: none;">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-white font-gaming flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-amber-400 shadow-md shadow-amber-400/50"></span>
+                    TOP POINTS LEADERBOARD
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Live in-game scoreboard score & rating points.</p>
+            </div>
+            <span class="text-xs font-mono font-bold text-amber-300 px-3 py-1 rounded-full bg-amber-950/40 border border-amber-500/30">
+                Scoreboard Points
+            </span>
+        </div>
+
+        @if($topPoints->isEmpty())
+            <div class="gaming-card p-12 text-center text-slate-400">
+                <p class="text-sm font-semibold">No points data recorded yet.</p>
+                <p class="text-xs text-slate-500 mt-1">Points sync automatically from the in-game scoreboard.</p>
+            </div>
+        @else
+            <div class="gaming-card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                            <tr>
+                                <th class="py-4 px-6 font-bold">Rank</th>
+                                <th class="py-4 px-6 font-bold">Gamertag</th>
+                                <th class="py-4 px-6 font-bold">Clan</th>
+                                <th class="py-4 px-6 font-bold text-right text-amber-300">Score Points</th>
+                                <th class="py-4 px-6 font-bold text-right text-rose-400">Kills</th>
+                                <th class="py-4 px-6 font-bold text-right">K / D</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80">
+                            @foreach($topPoints as $player)
+                                <tr class="hover:bg-amber-950/15 transition-colors">
+                                    <td class="py-4 px-6 font-extrabold text-sm font-gaming">
+                                        <span class="inline-flex items-center gap-1 {{ $loop->iteration === 1 ? 'text-amber-400 font-black' : ($loop->iteration === 2 ? 'text-slate-300 font-bold' : ($loop->iteration === 3 ? 'text-amber-600 font-bold' : 'text-slate-500 font-mono')) }}">
+                                            #{{ $loop->iteration }}
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 font-mono font-bold text-white">
+                                        <a href="{{ route('players.show', $player->gamertag) }}" class="inline-flex items-center gap-2.5 hover:text-amber-300 transition group">
+                                            <div class="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700/80 overflow-hidden flex items-center justify-center text-[10px] text-cyan-300 shrink-0">
+                                                <img src="{{ \App\Services\PlayerAvatarService::getAvatarUrl($player->gamertag, 28) }}"
+                                                     alt="{{ $player->gamertag }}"
+                                                     onerror="this.style.display='none'"
+                                                     class="w-full h-full object-cover pixelated" />
+                                            </div>
+                                            <span class="group-hover:underline">{{ $player->gamertag }}</span>
+                                        </a>
+                                    </td>
+                                    <td class="py-4 px-6 text-xs text-purple-400 font-medium">
+                                        {{ $player->clan ?: '—' }}
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono font-bold">
+                                        <span class="px-3 py-1 rounded-lg bg-amber-500/20 border border-amber-500/50 text-amber-300 text-sm inline-block shadow-sm shadow-amber-500/20">
+                                            {{ $player->rating }} Points
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono font-bold text-rose-400">
+                                        {{ $player->kills }}
+                                    </td>
                                     <td class="py-4 px-6 text-right font-mono text-xs text-slate-300">
-                                        {{ $player->kd_ratio }} ({{ $player->kills }}k / {{ $player->deaths }}d)
+                                        {{ $player->kd_ratio }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+    </div>
+
+    <!-- Top Kills Leaderboard Tab -->
+    <div x-show="activeTab === 'kills'" class="space-y-6" style="display: none;">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-white font-gaming flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-rose-500 shadow-md shadow-rose-500/50"></span>
+                    TOP KILLS LEADERBOARD
+                </h2>
+                <p class="text-xs text-slate-400 mt-1">Total confirmed in-game player eliminations.</p>
+            </div>
+            <span class="text-xs font-mono font-bold text-rose-300 px-3 py-1 rounded-full bg-rose-950/40 border border-rose-500/30">
+                PvP Slayers
+            </span>
+        </div>
+
+        @if($topKillers->isEmpty())
+            <div class="gaming-card p-12 text-center text-slate-400">
+                <p class="text-sm font-semibold">No kills data recorded yet.</p>
+                <p class="text-xs text-slate-500 mt-1">Kills sync automatically from the in-game scoreboard.</p>
+            </div>
+        @else
+            <div class="gaming-card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                            <tr>
+                                <th class="py-4 px-6 font-bold">Rank</th>
+                                <th class="py-4 px-6 font-bold">Gamertag</th>
+                                <th class="py-4 px-6 font-bold">Clan</th>
+                                <th class="py-4 px-6 font-bold text-right text-rose-400">Confirmed Kills</th>
+                                <th class="py-4 px-6 font-bold text-right text-slate-400">Deaths</th>
+                                <th class="py-4 px-6 font-bold text-right text-emerald-400">K / D Ratio</th>
+                                <th class="py-4 px-6 font-bold text-right text-amber-300">Points</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80">
+                            @foreach($topKillers as $player)
+                                <tr class="hover:bg-rose-950/15 transition-colors">
+                                    <td class="py-4 px-6 font-extrabold text-sm font-gaming">
+                                        <span class="inline-flex items-center gap-1 {{ $loop->iteration === 1 ? 'text-amber-400 font-black' : ($loop->iteration === 2 ? 'text-slate-300 font-bold' : ($loop->iteration === 3 ? 'text-amber-600 font-bold' : 'text-slate-500 font-mono')) }}">
+                                            #{{ $loop->iteration }}
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 font-mono font-bold text-white">
+                                        <a href="{{ route('players.show', $player->gamertag) }}" class="inline-flex items-center gap-2.5 hover:text-rose-300 transition group">
+                                            <div class="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700/80 overflow-hidden flex items-center justify-center text-[10px] text-cyan-300 shrink-0">
+                                                <img src="{{ \App\Services\PlayerAvatarService::getAvatarUrl($player->gamertag, 28) }}"
+                                                     alt="{{ $player->gamertag }}"
+                                                     onerror="this.style.display='none'"
+                                                     class="w-full h-full object-cover pixelated" />
+                                            </div>
+                                            <span class="group-hover:underline">{{ $player->gamertag }}</span>
+                                        </a>
+                                    </td>
+                                    <td class="py-4 px-6 text-xs text-purple-400 font-medium">
+                                        {{ $player->clan ?: '—' }}
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono font-bold">
+                                        <span class="px-3 py-1 rounded-lg bg-rose-500/20 border border-rose-500/50 text-rose-300 text-sm inline-block shadow-sm shadow-rose-500/20 font-black">
+                                            {{ $player->kills }} Kills
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono text-xs text-slate-400">
+                                        {{ $player->deaths }}
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono text-xs {{ $player->kd_ratio >= 1.5 ? 'text-emerald-400 font-bold' : 'text-slate-300' }}">
+                                        {{ $player->kd_ratio }}
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-mono text-xs text-amber-300 font-bold">
+                                        {{ $player->rating }} Pts
                                     </td>
                                 </tr>
                             @endforeach

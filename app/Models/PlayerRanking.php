@@ -40,4 +40,9 @@ class PlayerRanking extends Model
 
         return round($this->kills / $this->deaths, 2);
     }
+
+    public function getPointsAttribute(): int
+    {
+        return (int) $this->rating;
+    }
 }

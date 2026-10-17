@@ -77,4 +77,32 @@ class CommunityPagesTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('No Player Ranking Records Yet');
     }
+
+    public function test_homepage_and_rankings_display_top_points_and_top_kills(): void
+    {
+        \App\Models\PlayerRanking::create([
+            'gamertag' => 'SlayerPro',
+            'rank' => 1,
+            'rating' => 1500,
+            'kills' => 88,
+            'deaths' => 10,
+            'wins' => 20,
+            'losses' => 2,
+        ]);
+
+        $homeResponse = $this->get('/');
+        $homeResponse->assertStatus(200);
+        $homeResponse->assertSee('Top Points');
+        $homeResponse->assertSee('Top Kills');
+        $homeResponse->assertSee('SlayerPro');
+        $homeResponse->assertSee('88k');
+        $homeResponse->assertSee('1500 Pts');
+
+        $rankingsResponse = $this->get('/rankings');
+        $rankingsResponse->assertStatus(200);
+        $rankingsResponse->assertSee('Top Points');
+        $rankingsResponse->assertSee('Top Kills');
+        $rankingsResponse->assertSee('88');
+        $rankingsResponse->assertSee('1500 Pts');
+    }
 }

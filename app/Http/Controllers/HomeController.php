@@ -31,14 +31,20 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        $topPlayers = PlayerRanking::orderBy('rank', 'asc')
+        $topPoints = PlayerRanking::orderBy('rank', 'asc')
             ->take(5)
             ->get();
+
+        $topKillers = PlayerRanking::orderByDesc('kills')
+            ->take(5)
+            ->get();
+
+        $topPlayers = $topPoints;
 
         $topClans = ClanRanking::orderBy('rank', 'asc')
             ->take(5)
             ->get();
 
-        return view('home', compact('settings', 'latestNews', 'topPlayers', 'topClans', 'serverStatus', 'reigningUhcWinner'));
+        return view('home', compact('settings', 'latestNews', 'topPlayers', 'topPoints', 'topKillers', 'topClans', 'serverStatus', 'reigningUhcWinner'));
     }
 }
