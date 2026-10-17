@@ -39,7 +39,7 @@ If your UltraMC server runs standard Bedrock:
    ```json
    [
      {
-       "pack_id": "c3947f61-39bc-4df2-8cb2-87a329c38102",
+       "pack_id": "4c9e83b4-82a1-42e7-9195-2c8ebca98cf1",
        "version": [1, 0, 0]
      }
    ]
