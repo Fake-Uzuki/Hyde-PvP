@@ -44,8 +44,14 @@ If your UltraMC server runs standard Bedrock:
      }
    ]
    ```
-4. Restart your server.
-5. In game, test `/verify 123456` and `/syncrankings`!
+4. **Enable Beta APIs Experiment**:
+   - In Minecraft Bedrock BDS, JavaScript scripting (`@minecraft/server`) is only executed if the **Beta APIs** experimental toggle is enabled on your world.
+   - If using UltraMC world settings, toggle **Beta APIs** to ON.
+5. Restart your server.
+6. In game, run:
+   - Official Bedrock Command: `/scriptevent hyde:verify <code>`
+   - Or Chat Command: `!verify <code>`
+   - Scoreboard Sync: `/scriptevent hyde:sync` or `!syncrankings`
 
 ---
 
