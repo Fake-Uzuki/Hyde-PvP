@@ -1,40 +1,74 @@
-# HYDE PVP - In-Game Player Verification Integration
+# HYDE PVP - In-Game Player Verification & Live Scoreboard Rankings
 
-This directory contains ready-to-use server-side scripts for your Minecraft Bedrock server to enable the `/verify <code>` command.
+This directory contains everything you need to connect your Minecraft Bedrock Server (`hydepvp.ultramc.co:19015`) to your live website (`https://hyde-pvp.onrender.com`).
 
 ---
 
-## How It Works
+## 1. Why `/verify` Didn't Work Initially
 
-1. A player logs into the HYDE PVP website and visits their **Account Profile** (`/profile`).
-2. They click **"Generate In-Game Code"** and receive a 6-digit PIN (e.g. `849201`).
-3. They join your Bedrock server (`hydepvp.ultramc.co:19015`) and run:
+Minecraft Bedrock (vanilla) does **not** come with a `/verify` command out of the box. 
+
+When you type `/verify <code>`, Minecraft only recognizes it if the **HYDE PVP Server Bridge** (plugin or behavior pack) is installed in your Minecraft server's files on UltraMC!
+
+---
+
+## 2. Features Included in this Bridge
+
+1. **Player Account Verification (`/verify <code>`)**:
+   - Links players' Bedrock Gamertag to their website profile.
+   - Grants the **Verified Player Badge** on the leaderboards.
+2. **Automatic Scoreboard Rankings Sync**:
+   - Reads your in-game scoreboard objectives (`kills`, `points`, `deaths`).
+   - Automatically posts scores to the website every **3–5 minutes**.
+   - Recalculates ranks (1st, 2nd, 3rd...) live on `/rankings` and the homepage top 5 leaderboard!
+3. **Manual Instant Sync Command (`/syncrankings`)**:
+   - Server operators/admins can type `/syncrankings` in-game to immediately update website leaderboards!
+
+---
+
+## 3. How to Install on UltraMC
+
+### Option A: Bedrock Dedicated Server (BDS) / Geyser (Behavior Pack) — Recommended
+If your UltraMC server runs standard Bedrock:
+1. In your UltraMC file manager, navigate to:
    ```text
-   /verify 849201
+   /behavior_packs/
    ```
-4. The server contacts `POST /api/server/verify-player` with the code, gamertag, and XUID.
-5. The player's website account instantly becomes **Verified**, locking their Bedrock Gamertag and granting the **Verified Player Badge**!
+2. Upload the `hyde_verify.mcpack` (or extract `bedrock-script-api/` into `/behavior_packs/hyde_verify/`).
+3. Open `world_behavior_packs.json` inside your active world folder and add the pack UUID:
+   ```json
+   [
+     {
+       "pack_id": "c3947f61-39bc-4df2-8cb2-87a329c38102",
+       "version": [1, 0, 0]
+     }
+   ]
+   ```
+4. Restart your server.
+5. In game, test `/verify 123456` and `/syncrankings`!
 
 ---
 
-## Option 1: PocketMine-MP (PHP Server) — *Recommended for Bedrock PvP*
-
-If your server runs **PocketMine-MP**:
-1. Copy the `pocketmine/` directory into your server's `plugins/` folder (or package it as a `.phar`).
-2. Open `plugins/HydeVerify/config.yml` (generated on first boot) and set:
+### Option B: PocketMine-MP (PHP Bedrock Server)
+If your UltraMC server runs PocketMine-MP:
+1. In your UltraMC file manager, go to `/plugins/`.
+2. Copy or upload the `pocketmine/` folder as `/plugins/HydeVerify/`.
+3. Open `/plugins/HydeVerify/config.yml` and ensure:
    ```yaml
-   web_api_url: "https://your-domain.com/api/server/verify-player"
-   server_key: "hyde-pvp-secret-key-19015" # Must match HYDE_SERVER_KEY in your .env
+   web_api_url: "https://hyde-pvp.onrender.com/api/server/verify-player"
+   sync_rankings_url: "https://hyde-pvp.onrender.com/api/server/sync-rankings"
+   server_key: "hyde-pvp-secret-key-19015"
+   sync_interval_minutes: 5
    ```
-3. Restart or run `/reload` on your server.
-4. Players can now use `/verify <code>`.
+4. Run `/reload` or restart your server.
+5. In game, test `/verify <code>` and `/syncrankings`!
 
 ---
 
-## Option 2: Bedrock Dedicated Server (BDS) Script API
+## 4. API Endpoints on Your Live Website
 
-If your server runs official Mojang BDS:
-1. Place the `bedrock-script-api/` folder inside your server's `behavior_packs/` folder.
-2. In `scripts/main.js`, update `WEB_API_URL` to your website's URL.
-3. Enable `Beta APIs` in your world's `world_behavior_packs.json`.
-4. Players can now type `/verify <code>` in in-game chat.
+| Method | Endpoint | Description | Auth Header |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/server/verify-player` | Links player gamertag using 6-digit code | `X-Server-Key: hyde-pvp-secret-key-19015` |
+| `POST` | `/api/server/sync-rankings` | Batch updates player scoreboard stats & recalculates ranks | `X-Server-Key: hyde-pvp-secret-key-19015` |
+| `POST` | `/api/server/update-player-score` | Updates a single player's score live | `X-Server-Key: hyde-pvp-secret-key-19015` |

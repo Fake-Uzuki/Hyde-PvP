@@ -10,7 +10,14 @@ commands:
     description: Link your Bedrock account to your HYDE PVP website account.
     usage: "/verify <code>"
     permission: hyde.verify.use
+  syncrankings:
+    description: Sync live scoreboard stats and kills to the HYDE PVP website leaderboards.
+    usage: "/syncrankings"
+    permission: hyde.rankings.sync
 permissions:
   hyde.verify.use:
     default: true
     description: Allows players to verify their account.
+  hyde.rankings.sync:
+    default: op
+    description: Allows administrators to trigger scoreboard rankings sync.
