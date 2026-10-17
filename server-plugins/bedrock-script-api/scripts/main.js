@@ -13,7 +13,7 @@ const SYNC_RANKINGS_URL = "https://hyde-pvp.onrender.com/api/server/sync-ranking
 const SERVER_KEY = "hyde-pvp-secret-key-19015";
 const SYNC_INTERVAL_TICKS = 3600; // 3 minutes
 
-console.warn("[Hyde Bridge] Initializing player verification & live scoreboard sync...");
+console.warn("[Hyde Verify] Standalone bridge initializing for Bedrock 2.3.0...");
 
 /**
  * Handle account verification request
@@ -65,8 +65,41 @@ export async function verifyPlayerAccount(player, code) {
         }
     } catch (err) {
         player.sendMessage("§c[HYDE] Could not connect to verification server. Please check internet connection.");
-        console.error(`[Hyde Bridge] Verify error: ${err}`);
+        console.error(`[Hyde Verify] Verify error: ${err}`);
     }
+}
+
+/**
+ * Detect scoreboard objectives dynamically
+ */
+function findScoreboardObjectives(scoreboard) {
+    let killsObj = null;
+    let pointsObj = null;
+    let deathsObj = null;
+    let winsObj = null;
+
+    try {
+        const objectives = scoreboard.getObjectives();
+        for (const obj of objectives) {
+            const id = obj.id.toLowerCase();
+            if (!killsObj && (id === "kills" || id === "kill" || id.includes("kill"))) {
+                killsObj = obj;
+            }
+            if (!pointsObj && (id === "points" || id === "score" || id === "rating" || id.includes("point") || id.includes("score"))) {
+                pointsObj = obj;
+            }
+            if (!deathsObj && (id === "deaths" || id === "death" || id.includes("death"))) {
+                deathsObj = obj;
+            }
+            if (!winsObj && (id === "wins" || id === "win" || id.includes("win"))) {
+                winsObj = obj;
+            }
+        }
+    } catch (e) {
+        console.warn(`[Hyde Verify] Error finding scoreboard objectives: ${e}`);
+    }
+
+    return { killsObj, pointsObj, deathsObj, winsObj };
 }
 
 /**
@@ -75,12 +108,18 @@ export async function verifyPlayerAccount(player, code) {
 export async function syncScoreboardToWebsite(sender = null) {
     try {
         const scoreboard = world.scoreboard;
-        if (!scoreboard) return;
+        if (!scoreboard) {
+            if (sender) sender.sendMessage("§c[HYDE] Scoreboard system not available.");
+            return;
+        }
 
-        const killsObj = scoreboard.getObjective("kills") || scoreboard.getObjective("Kills") || scoreboard.getObjective("kill");
-        const pointsObj = scoreboard.getObjective("points") || scoreboard.getObjective("Points") || scoreboard.getObjective("score") || scoreboard.getObjective("Score") || scoreboard.getObjective("rating");
-        const deathsObj = scoreboard.getObjective("deaths") || scoreboard.getObjective("Deaths") || scoreboard.getObjective("death");
-        const winsObj = scoreboard.getObjective("wins") || scoreboard.getObjective("Wins");
+        const { killsObj, pointsObj, deathsObj, winsObj } = findScoreboardObjectives(scoreboard);
+
+        if (sender) {
+            const killsName = killsObj ? killsObj.id : "NOT FOUND (create with: /scoreboard objectives add kills dummy)";
+            const pointsName = pointsObj ? pointsObj.id : "NOT FOUND (create with: /scoreboard objectives add points dummy)";
+            sender.sendMessage(`§7[HYDE] Objectives: Kills=[§b${killsName}§7], Points=[§e${pointsName}§7]`);
+        }
 
         const playersList = [];
 
@@ -88,10 +127,19 @@ export async function syncScoreboardToWebsite(sender = null) {
             if (!player || !player.name) continue;
 
             const name = player.name;
-            const kills = killsObj ? (killsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
-            const points = pointsObj ? (pointsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
-            const deaths = deathsObj ? (deathsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
-            const wins = winsObj ? (winsObj.getScore(player.scoreboardIdentity) ?? 0) : 0;
+            let kills = 0;
+            let points = 0;
+            let deaths = 0;
+            let wins = 0;
+
+            try {
+                if (player.scoreboardIdentity) {
+                    if (killsObj) kills = killsObj.getScore(player.scoreboardIdentity) ?? 0;
+                    if (pointsObj) points = pointsObj.getScore(player.scoreboardIdentity) ?? 0;
+                    if (deathsObj) deaths = deathsObj.getScore(player.scoreboardIdentity) ?? 0;
+                    if (winsObj) wins = winsObj.getScore(player.scoreboardIdentity) ?? 0;
+                }
+            } catch (_) {}
 
             playersList.push({
                 gamertag: name,
@@ -124,13 +172,13 @@ export async function syncScoreboardToWebsite(sender = null) {
             if (sender) {
                 sender.sendMessage(`§a[HYDE] ✔ Synchronized ${playersList.length} player(s) to website leaderboards!`);
             }
-            console.warn(`[Hyde Bridge] Synced ${playersList.length} player(s) to website.`);
+            console.warn(`[Hyde Verify] Synced ${playersList.length} player(s) to website.`);
         } else {
             if (sender) sender.sendMessage(`§c[HYDE] Sync failed: HTTP ${response.status}`);
         }
     } catch (err) {
         if (sender) sender.sendMessage("§c[HYDE] Error connecting to website API.");
-        console.error(`[Hyde Bridge] Sync error: ${err}`);
+        console.error(`[Hyde Verify] Sync error: ${err}`);
     }
 }
 
@@ -168,7 +216,7 @@ try {
                     }
                 );
             } catch (e) {
-                console.warn(`[Hyde Bridge] Custom command /verify registration: ${e}`);
+                console.warn(`[Hyde Verify] /verify registration: ${e}`);
             }
 
             // Register /syncrankings
@@ -189,12 +237,12 @@ try {
                     }
                 );
             } catch (e) {
-                console.warn(`[Hyde Bridge] Custom command /syncrankings registration: ${e}`);
+                console.warn(`[Hyde Verify] /syncrankings registration: ${e}`);
             }
         });
     }
 } catch (e) {
-    console.warn(`[Hyde Bridge] Startup event error: ${e}`);
+    console.warn(`[Hyde Verify] Startup event error: ${e}`);
 }
 
 // ==========================================
@@ -275,4 +323,4 @@ system.runInterval(() => {
     syncScoreboardToWebsite();
 }, SYNC_INTERVAL_TICKS);
 
-console.warn("[Hyde Bridge] Hyde Bridge initialized successfully!");
+console.warn("[Hyde Verify] Standalone pack loaded successfully!");
