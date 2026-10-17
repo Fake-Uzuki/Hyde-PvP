@@ -92,11 +92,11 @@ class ServerRankingsController extends Controller
 
                 if ($player) {
                     $player->update([
-                        'rating' => $stats['points'] > 0 ? $stats['points'] : $player->rating,
-                        'kills' => $stats['kills'] > 0 ? $stats['kills'] : $player->kills,
-                        'deaths' => $stats['deaths'] > 0 ? $stats['deaths'] : $player->deaths,
-                        'wins' => $stats['wins'] > 0 ? $stats['wins'] : $player->wins,
-                        'losses' => $stats['losses'] > 0 ? $stats['losses'] : $player->losses,
+                        'rating' => isset($stats['points']) ? (int) $stats['points'] : $player->rating,
+                        'kills' => isset($stats['kills']) ? (int) $stats['kills'] : $player->kills,
+                        'deaths' => isset($stats['deaths']) ? (int) $stats['deaths'] : $player->deaths,
+                        'wins' => isset($stats['wins']) ? (int) $stats['wins'] : $player->wins,
+                        'losses' => isset($stats['losses']) ? (int) $stats['losses'] : $player->losses,
                         'clan' => $stats['clan'] ?? $player->clan,
                     ]);
                 } else {
